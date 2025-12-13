@@ -11,8 +11,8 @@ export function SidebarToggle() {
     <Button
       aria-label="折叠侧边栏"
       size="icon"
-      variant="default"
-      className="fixed z-50 bottom-20 right-6 shadow-lg rounded-full"
+      variant="outline"
+      className="fixed z-50 bottom-20 right-6 shadow-lg rounded-full bg-white"
       onClick={toggleSidebar}
     >
       <PanelRightOpen className="w-5 h-5" />
