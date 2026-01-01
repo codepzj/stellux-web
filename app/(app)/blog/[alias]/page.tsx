@@ -5,8 +5,7 @@ import { Toc } from '@/components/Toc'
 import { BackToTop } from '@/components/Tool/back-to-top'
 import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
 import Comment from '@/components/Comment'
-import { Calendar, Clock, BookOpen } from 'lucide-react'
-import { formatRelativeTime, formatDate, estimateReadingTime } from '@/lib/time-utils'
+import { formatDate, estimateReadingTime } from '@/lib/time-utils'
 
 type Props = {
   params: Promise<{ alias: string }>
@@ -27,30 +26,10 @@ export default async function BlogContent({ params }: Props) {
         <h1 className="text-3xl text-default-900 font-medium text-center">{post.title}</h1>
 
         {/* 文章元信息 */}
-        <div className="flex items-center justify-center gap-3 text-xs md:text-sm text-gray-600 dark:text-gray-300 my-6 px-4">
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">{formatDate(post.created_at)}</span>
-              <span className="hidden md:inline">创建于 {formatDate(post.created_at)}</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">{formatRelativeTime(post.updated_at)}</span>
-              <span className="hidden md:inline">更新于 {formatRelativeTime(post.updated_at)}</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <BookOpen className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">{estimateReadingTime(post.content)}min</span>
-              <span className="hidden md:inline">
-                约 {estimateReadingTime(post.content)} 分钟阅读
-              </span>
-            </span>
-          </div>
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400 my-4 px-4">
+          <span>发布于 {formatDate(post.created_at)}</span>
+          <span className="text-gray-300 dark:text-gray-600">·</span>
+          <span>{estimateReadingTime(post.content)} 分钟阅读</span>
         </div>
 
         <div className="h-10" />

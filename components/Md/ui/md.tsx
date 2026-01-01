@@ -87,7 +87,7 @@ export default function Md({ content, className }: { content: string; className?
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="scroll-m-20 border-b border-gray-200 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-8"
+                className="scroll-m-20 border-b border-gray-200 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
                 {...props}
               >
                 {children}
@@ -96,29 +96,29 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="scroll-m-20 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 my-6"
+                className="scroll-m-20 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 my-8"
                 {...props}
               >
                 {children}
               </h3>
             ),
             h4: ({ children }) => (
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-4">
+              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-6">
                 {children}
               </h4>
             ),
             p: ({ children }) => (
-              <p className="mt-4 leading-relaxed text-gray-800 dark:text-gray-200 text-base font-normal">
+              <p className="my-4 leading-relaxed text-gray-800 dark:text-gray-200 text-base font-normal">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="!pl-5 mt-4 list-disc space-y-1 text-gray-800 dark:text-gray-200">
+              <ul className="pl-5! mt-4 list-disc space-y-1 text-gray-800 dark:text-gray-200">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="!pl-5 mt-4 list-decimal space-y-1 text-gray-800 dark:text-gray-200">
+              <ol className="pl-5! mt-4 list-decimal space-y-1 text-gray-800 dark:text-gray-200">
                 {children}
               </ol>
             ),

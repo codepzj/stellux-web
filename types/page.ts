@@ -57,6 +57,7 @@ export interface PageContent {
   motto?: string
   show_recent_posts?: boolean
   recent_posts_count?: number
+  show_repositories?: boolean
 
   // About页面配置
   skills?: Skill[]

@@ -34,9 +34,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# 生产环境配置文件
-.env.production
-
 # 临时文件
 tmp/
 

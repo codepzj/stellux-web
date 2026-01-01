@@ -9,7 +9,7 @@ export default function Footer() {
         <p className="text-gray-500 dark:text-gray-400 text-sm text-center">
           © {new Date().getFullYear()} powered by{' '}
           <a
-            href="https://github.com/codepzj/Stellux-Server"
+            href="https://cnb.cool/codepzj/stellux-server"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
