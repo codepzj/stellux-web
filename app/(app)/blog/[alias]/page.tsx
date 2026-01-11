@@ -4,7 +4,6 @@ import { Metadata } from 'next'
 import { Toc } from '@/components/Toc'
 import { BackToTop } from '@/components/Tool/back-to-top'
 import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
-import Comment from '@/components/Comment'
 import { formatDate, estimateReadingTime } from '@/lib/time-utils'
 
 type Props = {
@@ -34,8 +33,6 @@ export default async function BlogContent({ params }: Props) {
 
         <div className="h-10" />
         <Markdown className="wrap-break-word overflow-x-auto" content={post.content} />
-        <div className="h-10" />
-        <Comment />
       </div>
       {hasHeadings && (
         <div className="hidden relative lg:block lg:w-1/5">

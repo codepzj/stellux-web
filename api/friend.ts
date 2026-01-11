@@ -30,18 +30,6 @@ export const getFriendListAPI = () => {
   return request<FriendShowVO[]>('/friend/list')
 }
 
-export const getAllFriendsAPI = () => {
-  return request<FriendVO[]>('/admin-api/friend/all')
-}
-
 export const createFriendAPI = (data: CreateFriendDTO) => {
-  return request<null>('/admin-api/friend/create', 'POST', { body: data })
-}
-
-export const updateFriendAPI = (data: UpdateFriendDTO) => {
-  return request<null>('/admin-api/friend/update', 'PUT', { body: data })
-}
-
-export const deleteFriendAPI = (id: string) => {
-  return request<null>(`/admin-api/friend/delete/${id}`, 'DELETE')
+  return request<null>('/friend/create', 'POST', { body: data })
 }

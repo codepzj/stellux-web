@@ -9,7 +9,6 @@ import {
   CardDescription,
   CardFooter,
 } from '@/components/ui/card'
-import Comment from '@/components/Comment'
 import { Globe, Crown, Info } from 'lucide-react'
 import Image from 'next/image'
 
@@ -96,8 +95,6 @@ export default async function FriendsPage() {
       <div className="mt-8 text-sm">
         <FriendSubmitModal />
       </div>
-      <div className="h-10" />
-      <Comment />
     </div>
   )
 }
