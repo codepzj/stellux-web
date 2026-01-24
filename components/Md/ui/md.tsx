@@ -108,19 +108,24 @@ export default function Md({ content, className }: { content: string; className?
               </h4>
             ),
             p: ({ children }) => (
-              <p className="my-4 leading-relaxed text-gray-800 dark:text-gray-200 text-base font-normal">
+              <p className="my-4 text-gray-800 dark:text-gray-200 text-base font-normal leading-9.5">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="pl-5! mt-4 list-disc space-y-1 text-gray-800 dark:text-gray-200">
+              <ul className="pl-5! mt-4 list-disc space-y-1 text-base text-gray-800 dark:text-gray-200">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="pl-5! mt-4 list-decimal space-y-1 text-gray-800 dark:text-gray-200">
+              <ol className="pl-5! mt-4 list-decimal space-y-1 text-base text-gray-800 dark:text-gray-200">
                 {children}
               </ol>
+            ),
+            li: ({ children }) => (
+              <li className="my-2 text-base text-gray-800 dark:text-gray-200">
+                {children}
+              </li>
             ),
             img: ({ src, alt }) => (
               <PhotoView src={src as string} key={photoIndex++}>
@@ -182,7 +187,7 @@ export default function Md({ content, className }: { content: string; className?
 
               // 单行代码块
               return (
-                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-1.5 my-1 px-2 py-1 text-sm text-gray-800 dark:text-gray-200 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
+                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-1.5 px-1 py-1 text-xs text-gray-800 dark:text-gray-200 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
                   {children}
                 </code>
               )

@@ -3,7 +3,7 @@ import { Markdown } from '@/components/Md'
 import { Metadata } from 'next'
 import { Toc } from '@/components/Toc'
 import { BackToTop } from '@/components/Tool/back-to-top'
-import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
+// import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
 import { formatDate, estimateReadingTime } from '@/lib/time-utils'
 
 type Props = {
@@ -40,7 +40,7 @@ export default async function BlogContent({ params }: Props) {
         </div>
       )}
       <BackToTop />
-      <ScrollToComment />
+      {/* <ScrollToComment /> */}
     </div>
   )
 }
