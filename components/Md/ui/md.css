@@ -1,5 +1,11 @@
 @import 'github-markdown-css/github-markdown.css';
 
+/* 图片预览时隐藏页面滚动条 */
+html[data-photo-view-open='1'],
+body[data-photo-view-open='1'] {
+  overflow: hidden;
+}
+
 [id^='header-'] {
   scroll-margin-top: 5px;
 }

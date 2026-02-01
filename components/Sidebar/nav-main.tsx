@@ -32,22 +32,27 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
   const hasChildren = item.items && item.items.length > 0
 
   const shouldBeOpen = itemMatchesPath(item, pathname)
-  const [open, setOpen] = useState(shouldBeOpen)
+  // 默认全部展开
+  const [open, setOpen] = useState(true)
 
-  // 当路径变化时重新展开匹配项
   useEffect(() => {
-    setOpen(shouldBeOpen)
+    if (shouldBeOpen) setOpen(true)
   }, [pathname, shouldBeOpen])
 
   if (!hasChildren) {
     return (
-      <SidebarMenuItem className={cn('rounded-md transition-all duration-200')}>
+      <SidebarMenuItem
+        className={cn(
+          'rounded-md transition-all duration-200',
+          depth > 0 && 'text-sidebar-foreground/90'
+        )}
+      >
         <SidebarMenuButton asChild tooltip={item.title}>
           <Link
             href={item.url}
             className={cn(
               'hover:bg-primary/10! hover:dark:bg-primary/20! transition-all duration-200 ease-in-out',
-              pathname === item.url && 'bg-primary/10 dark:bg-primary/20'
+              pathname === item.url && 'bg-primary/5 dark:bg-primary/10'
             )}
           >
             {item.icon && <item.icon />}
@@ -60,7 +65,12 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
 
   return (
     <Collapsible asChild open={open} onOpenChange={setOpen}>
-      <SidebarMenuItem className="ml-0">
+      <SidebarMenuItem
+        className={cn(
+          'rounded-md',
+          depth > 0 && 'text-sidebar-foreground/90'
+        )}
+      >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton
             tooltip={item.title}
@@ -76,19 +86,10 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
             />
           </SidebarMenuButton>
         </CollapsibleTrigger>
-        <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out">
-          <SidebarMenuSub className="space-y-1">
-            {item.items?.map((child: DocTreeItem, index: number) => (
-              <div
-                key={child.title}
-                className="animate-in fade-in slide-in-from-top-2 duration-300 ease-out"
-                style={{
-                  animationDelay: `${index * 80}ms`,
-                  animationFillMode: 'both',
-                }}
-              >
-                <RecursiveMenuItem item={child} depth={depth + 1} />
-              </div>
+        <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+          <SidebarMenuSub className="ml-0.5 space-y-0.5 border-l border-sidebar-border/50 pl-3 py-1">
+            {item.items?.map((child: DocTreeItem) => (
+              <RecursiveMenuItem key={child.title} item={child} depth={depth + 1} />
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
@@ -100,7 +101,7 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
 export function NavMain({ doctree }: { doctree: DocTreeItem[] }) {
   return (
     <SidebarGroup>
-      <SidebarMenu className="mt-8">
+      <SidebarMenu className="mt-8 gap-1.5">
         {doctree.map((item) => (
           <RecursiveMenuItem key={item.title} item={item} depth={0} />
         ))}

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -77,8 +77,28 @@ export default function Md({ content, className }: { content: string; className?
 
   let photoIndex = 0
 
+  useEffect(
+    () => () => {
+      delete document.documentElement.dataset.photoViewOpen
+      delete document.body.dataset.photoViewOpen
+    },
+    []
+  )
+
   return (
-    <PhotoProvider>
+    <PhotoProvider
+      onVisibleChange={(visible) => {
+        const html = document.documentElement
+        const body = document.body
+        if (visible) {
+          html.dataset.photoViewOpen = '1'
+          body.dataset.photoViewOpen = '1'
+        } else {
+          delete html.dataset.photoViewOpen
+          delete body.dataset.photoViewOpen
+        }
+      }}
+    >
       <article className={cn('markdown-body overflow-y-hidden', className)}>
         <ReactMarkdown
           rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeKatex]}
@@ -147,7 +167,7 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="rounded-lg bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-700/60 !p-0.5 my-6 overflow-x-auto text-sm">
+              <pre className="rounded-lg bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-700/60 p-0.5! my-6 overflow-x-auto text-sm">
                 {children}
               </pre>
             ),

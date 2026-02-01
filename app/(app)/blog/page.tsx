@@ -308,8 +308,7 @@ export default function BlogList() {
                                   onClick={(e) => {
                                     e.preventDefault()
                                     handlePageChange(page)
-                                  }}
-                                >
+                                  } } size={undefined}                                >
                                   {page}
                                 </PaginationLink>
                               </PaginationItem>

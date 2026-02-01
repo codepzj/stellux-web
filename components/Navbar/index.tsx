@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { SunIcon, MoonIcon } from '@/components/SvgIcon'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
 
@@ -102,6 +103,7 @@ function MobileNav({ onClick }: { onClick: () => void }) {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [pageConfig, setPageConfig] = useState<PageContent | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -112,6 +114,8 @@ export default function Navbar() {
         }
       } catch (error) {
         console.error('获取主页配置失败:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -125,17 +129,23 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 md:gap-3 shrink-0 min-w-[120px] md:min-w-[140px]"
         >
-          {pageConfig?.avatar && (
+          {isLoading ? (
+            <Skeleton className="w-7 h-7 md:w-8 md:h-8 rounded-full shrink-0" />
+          ) : pageConfig?.avatar ? (
             <img
               src={pageConfig.avatar}
               alt="avatar"
               className="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover"
               loading="lazy"
             />
+          ) : null}
+          {isLoading ? (
+            <Skeleton className="h-5 w-24 md:w-28 rounded" />
+          ) : (
+            <span className="text-[15px] font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
+              {pageConfig?.name || 'Stellux'}
+            </span>
           )}
-          <span className="text-[15px] font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
-            {pageConfig?.name || 'Stellux'}
-          </span>
         </Link>
 
         {/* 桌面导航 */}
