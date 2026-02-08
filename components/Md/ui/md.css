@@ -144,7 +144,6 @@ body[data-photo-view-open='1'] {
   margin: 0;
   color: var(--fgColor-default);
   background-color: transparent; /* 让全局背景透出 */
-  font-size: 17px; /* 提升基础字号 */
   line-height: 1.85; /* 再提升行高，增强可读性 */
   word-wrap: break-word;
 }
