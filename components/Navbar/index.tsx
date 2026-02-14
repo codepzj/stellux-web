@@ -8,24 +8,15 @@ import { SunIcon, MoonIcon } from '@/components/SvgIcon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
+import './index.css'
 
-// 仅使用真实存在的路由，按 AstroPaper 导航风格取名
 const NAV_LINKS = [
-  { href: '/', label: 'Home' },
   { href: '/blog', label: 'Posts' },
   { href: '/document', label: 'Docs' },
   { href: '/about', label: 'About' },
   { href: '/friends', label: 'Friends' },
 ]
 
-// AstroPaper 风格的波浪下划线（active 时）
-const WAVY_UNDERLINE_STYLE = `
-.nav-link-active { 
-  text-decoration-line: underline; 
-  text-decoration-style: wavy; 
-  text-underline-offset: 6px; 
-}
-`
 
 function DesktopNav() {
   const pathname = usePathname()
@@ -33,7 +24,6 @@ function DesktopNav() {
 
   return (
     <>
-      <style>{WAVY_UNDERLINE_STYLE}</style>
       <nav className="hidden w-full md:flex items-center justify-end space-x-6">
         {NAV_LINKS.map((item) => {
           const isActive =
@@ -42,7 +32,7 @@ function DesktopNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[14px] font-medium ${
+              className={`text-[14px] font-medium navbar-link ${
                 isActive
                   ? 'text-foreground nav-link-active'
                   : 'text-gray-700 hover:text-foreground dark:text-gray-300'

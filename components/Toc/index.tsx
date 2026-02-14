@@ -43,6 +43,7 @@ export function Toc({ content, className }: TocProps) {
   )
 
   const activeId = useActiveItem(itemIds)
+
   const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {

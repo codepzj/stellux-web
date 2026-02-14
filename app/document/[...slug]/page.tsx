@@ -7,8 +7,8 @@ import { DocSidebar } from '@/components/Sidebar'
 import { convertToDocumentTreeData } from '@/utils/document-tree'
 import { DocumentContentVO } from '@/types/document-content'
 import { Metadata } from 'next'
-import { SidebarToggle } from '@/components/Tool/sidebar-toggle'
-import { BackToTop } from '@/components/Tool/back-to-top'
+import { SidebarToggle } from '@/components/SideTool/sidebar-toggle'
+import { BackToTop } from '@/components/SideTool/back-to-top'
 import { Calendar, Clock, BookOpen } from 'lucide-react'
 import { formatRelativeTime, formatDate, estimateReadingTime } from '@/lib/time-utils'
 
@@ -67,22 +67,13 @@ export default async function DocPage({ params }: DocPageProps) {
       <SidebarInset>
         <div className="w-full flex flex-col md:flex-row justify-center gap-2 mt-8">
           <div className="w-full lg:w-4/5 md:max-w-xl lg:max-w-3xl md:mr-4 mb-20 px-4">
-            <div className="text-3xl font-bold font-sans py-4 mb-4">
+            <div className="text-3xl font-bold font-mono py-4 mb-4">
               {isRoot ? document?.title || '' : documentContent?.title || ''}
             </div>
 
             {/* 文档元信息 */}
             {!isRoot && documentContent && (
               <div className="flex items-center gap-3 text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-8 px-2">
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-                  <span className="font-medium">
-                    <span className="md:hidden">{formatDate(documentContent.created_at)}</span>
-                    <span className="hidden md:inline">
-                      创建于 {formatDate(documentContent.created_at)}
-                    </span>
-                  </span>
-                </div>
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
                   <span className="font-medium">

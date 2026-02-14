@@ -2,7 +2,7 @@ import { getPostByAliasAPI } from '@/api/post'
 import { Markdown } from '@/components/Md'
 import { Metadata } from 'next'
 import { Toc } from '@/components/Toc'
-import { BackToTop } from '@/components/Tool/back-to-top'
+import { BackToTop } from '@/components/SideTool/back-to-top'
 // import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
 import { formatDate, formatRelativeTime, estimateReadingTime } from '@/lib/time-utils'
 import { Calendar, Clock, BookOpen } from 'lucide-react'
@@ -23,19 +23,10 @@ export default async function BlogContent({ params }: Props) {
   return (
     <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
       <div className="w-full lg:w-4/5 p-4">
-        <div className="text-3xl font-bold font-sans py-4 mb-4">{post.title}</div>
+        <div className="text-3xl font-bold font-mono py-4 mb-4">{post.title}</div>
 
-        {/* 文章元信息（与文档页保持一致） */}
+        {/* 文章元信息 */}
         <div className="flex items-center gap-3 text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-8 px-2">
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">{formatDate(post.created_at)}</span>
-              <span className="hidden md:inline">
-                创建于 {formatDate(post.created_at)}
-              </span>
-            </span>
-          </div>
           <div className="flex items-center gap-1">
             <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
             <span className="font-medium">

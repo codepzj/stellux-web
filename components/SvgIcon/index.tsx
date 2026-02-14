@@ -10,6 +10,7 @@ import { TagIcon } from './icon/tag'
 import { SystemIcon } from './icon/system'
 import { BackToTopIcon } from './icon/back-to-top'
 import { AboutIcon } from './icon/about'
+import { SpinnerIcon } from './icon/spinner'
 
 export {
   GithubIcon,
@@ -24,4 +25,5 @@ export {
   SystemIcon,
   BackToTopIcon,
   AboutIcon,
+  SpinnerIcon,
 }

@@ -60,10 +60,10 @@ export interface PageContent {
   show_repositories?: boolean
 
   // About页面配置
-  skills?: Skill[]
-  timeline?: Timeline[]
-  interests?: string[]
-  focus_items?: string[]
+  skills: Skill[]
+  timeline: Timeline[]
+  interests: string[]
+  focus_items: string[]
 
   // SEO配置
   seo_title?: string

@@ -33,42 +33,6 @@ export default async function FriendsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mt-8">
-        <Card className="border border-border/20 bg-card/10 shadow-sm transition-none">
-          <CardHeader className="flex flex-row items-start gap-4 pb-2">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-muted shrink-0 ring-2 ring-primary/20">
-              <Image
-                src="https://cdn.codepzj.cn/image/20250529174726187.jpeg"
-                alt="头像"
-                width={64}
-                height={64}
-                className="w-full h-full object-cover"
-                unoptimized
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Crown className="w-5 h-5" />
-                浩瀚星河
-              </CardTitle>
-              <CardDescription className="mt-1 text-base">缓慢向上也是一种勇气。</CardDescription>
-            </div>
-          </CardHeader>
-          <CardFooter className="pt-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Globe className="w-4 h-4" />
-              <a
-                href="https://www.golangblog.com"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="hover:text-foreground transition-colors font-mono text-xs"
-              >
-                https://www.golangblog.com
-              </a>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
       {[0, 1, 2, 3].map((t) =>
         groups[t] && groups[t]!.length > 0 ? (
           <section key={t} className={`mb-8 ${t === 0 ? 'mt-12' : ''}`}>

@@ -1,0 +1,5 @@
+.navbar-link.nav-link-active {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 6px;
+}
