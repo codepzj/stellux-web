@@ -87,7 +87,7 @@ export default function Md({ content, className }: { content: string; className?
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="scroll-m-16 border-b border-gray-200 dark:border-gray-700 pb-3 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
+                className="scroll-m-16 border-b border-gray-200 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
                 {...props}
               >
                 {children}
@@ -96,14 +96,14 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="scroll-m-16 text-[1.3rem] font-bold text-gray-900 dark:text-gray-100 my-8"
+                className="scroll-m-16 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 my-8"
                 {...props}
               >
                 {children}
               </h3>
             ),
             h4: ({ children }) => (
-              <h4 className="scroll-m-16 text-xl font-semibold text-gray-900 dark:text-gray-100 my-6">
+              <h4 className="scroll-m-16 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-6">
                 {children}
               </h4>
             ),
@@ -187,7 +187,7 @@ export default function Md({ content, className }: { content: string; className?
 
               // 单行代码块
               return (
-                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-1.5 px-1 py-1 text-xs text-gray-800 dark:text-gray-200 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
+                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-0.5! px-1 py-1 text-sm! text-gray-800 dark:text-gray-200 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
                   {children}
                 </code>
               )
