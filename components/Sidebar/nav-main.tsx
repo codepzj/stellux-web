@@ -18,7 +18,7 @@ import {
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
-// 判断当前 item 或其子孙是否匹配当前路径
+// 判断当前 item 或其子孙是否匹配当前路径, 用于判断当前路径是否在 sidebar 中
 function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
   if (item.url === pathname) return true
   if (item.items) {
@@ -27,65 +27,111 @@ function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
   return false
 }
 
-// 二级手风琴: 全局只允许一个二级分组展开, 用 url 作为唯一 key
-function useSecondLevelAccordion(doctree: DocTreeItem[]) {
+// 二级手风琴(按一级隔离): 每个一级分组内只允许一个二级分组展开
+// 使用 rootKey/secondKey 为「url-索引」保证唯一, 避免同 url 多节点同时展开
+function useSecondLevelAccordionByRoot(doctree: DocTreeItem[]) {
   const pathname = usePathname()
-  // 找出当前路径所在的二级 key, 用于初始展开
-  const initialKey = (() => {
-    for (const root of doctree) {
+  const findMatch = () => {
+    for (let rootIndex = 0; rootIndex < doctree.length; rootIndex++) {
+      const root = doctree[rootIndex]
       if (!root.items) continue
-      for (const second of root.items) {
-        if (itemMatchesPath(second, pathname)) return second.url
+      for (let secondIndex = 0; secondIndex < root.items.length; secondIndex++) {
+        const second = root.items[secondIndex]
+        if (itemMatchesPath(second, pathname)) {
+          return {
+            rootKey: `${root.url}-${rootIndex}`,
+            secondKey: `${second.url}-${secondIndex}`,
+          }
+        }
       }
     }
     return null
-  })()
-  const [openSecondKey, setOpenSecondKey] = useState<string | null>(() => initialKey)
+  }
+
+  // 初始化: 仅展开当前路径所在的「一级」下的某个二级(如果命中)
+  const [openSecondKeyByRoot, setOpenSecondKeyByRoot] = useState<Record<string, string | null>>(
+    () => {
+      const match = findMatch()
+      return match ? { [match.rootKey]: match.secondKey } : {}
+    }
+  )
 
   useEffect(() => {
-    const key = (() => {
-      for (const root of doctree) {
-        if (!root.items) continue
-        for (const second of root.items) {
-          if (itemMatchesPath(second, pathname)) return second.url
-        }
+    const match = findMatch()
+    if (!match) return
+    setOpenSecondKeyByRoot((prev) => {
+      if (prev[match.rootKey] === match.secondKey) return prev
+      return {
+        ...prev,
+        [match.rootKey]: match.secondKey,
       }
-      return null
-    })()
-    if (key) setOpenSecondKey(key)
+    })
   }, [pathname, doctree])
 
-  return { openSecondKey, setOpenSecondKey }
+  const setOpenSecondKeyForRoot = (rootKey: string, secondKey: string | null) => {
+    setOpenSecondKeyByRoot((prev) => {
+      // 确保每个一级分组只保存一个二级 key, 用于确保每个一级分组只保存一个二级 key
+      const newState = { ...prev }
+      if (secondKey === null) {
+        // 收起:清除该一级的二级展开状态
+        delete newState[rootKey]
+      } else {
+        // 展开:只设置当前二级, 覆盖之前的
+        newState[rootKey] = secondKey
+      }
+      return newState
+    })
+  }
+
+  return { openSecondKeyByRoot, setOpenSecondKeyForRoot }
 }
 
 function RecursiveMenuItem({
   item,
   depth = 0,
-  openSecondKey,
-  setOpenSecondKey,
+  rootKey,
+  itemId,
+  openSecondKeyByRoot,
+  setOpenSecondKeyForRoot,
 }: {
   item: DocTreeItem
   depth?: number
-  openSecondKey: string | null
-  setOpenSecondKey: (key: string | null) => void
+  rootKey: string
+  /** 当前项在兄弟中的唯一 id(url + 索引), 用于二级手风琴, 避免同 url 多节点同时展开 */
+  itemId?: string
+  openSecondKeyByRoot: Record<string, string | null>
+  setOpenSecondKeyForRoot: (rootKey: string, secondKey: string | null) => void
 }) {
   const pathname = usePathname()
   const hasChildren = item.items && item.items.length > 0
   const shouldBeOpen = itemMatchesPath(item, pathname)
 
-  // 一级(depth 0): 可折叠，本地状态；二级(depth 1): 手风琴；更深(depth>=2): 本地状态
   const isSecondLevel = depth === 1
-  const [openLocal, setOpenLocal] = useState(true)
+  const [openLocal, setOpenLocal] = useState(false)
 
   useEffect(() => {
-    if (shouldBeOpen) setOpenLocal(true)
-  }, [pathname, shouldBeOpen])
+    if (!isSecondLevel && shouldBeOpen) {
+      setOpenLocal(true)
+    }
+  }, [pathname, shouldBeOpen, isSecondLevel])
 
-  const open = isSecondLevel ? openSecondKey === item.url : openLocal
+  // 二级项：用手风琴状态里的唯一 itemId 比较, 只展开一个
+  const open = isSecondLevel
+    ? (openSecondKeyByRoot[rootKey] ?? null) === (itemId ?? item.url)
+    : openLocal
 
   const handleOpenChange = (next: boolean) => {
     if (isSecondLevel) {
-      setOpenSecondKey(next ? item.url : null)
+      const id = itemId ?? item.url
+      if (next) {
+        if ((openSecondKeyByRoot[rootKey] ?? null) !== id) {
+          setOpenSecondKeyForRoot(rootKey, id)
+        }
+      } else {
+        if ((openSecondKeyByRoot[rootKey] ?? null) === id) {
+          setOpenSecondKeyForRoot(rootKey, null)
+        }
+      }
     } else {
       setOpenLocal(next)
     }
@@ -116,7 +162,14 @@ function RecursiveMenuItem({
   }
 
   return (
-    <Collapsible asChild open={open} onOpenChange={handleOpenChange}>
+    <Collapsible 
+      asChild 
+      open={open} 
+      onOpenChange={(next) => {
+        // 防止事件冒泡, 确保只处理当前项
+        handleOpenChange(next)
+      }}
+    >
       <SidebarMenuItem
         className={cn(
           'rounded-md',
@@ -127,6 +180,12 @@ function RecursiveMenuItem({
           <SidebarMenuButton
             tooltip={item.title}
             className="transition-all duration-200 ease-in-out hover:bg-primary/5 dark:hover:bg-primary/10"
+            onClick={(e) => {
+              // 阻止事件冒泡, 确保点击事件只在当前项处理
+              if (isSecondLevel) {
+                e.stopPropagation()
+              }
+            }}
           >
             {item.icon && <item.icon />}
             <span className="transition-all duration-200">{item.title}</span>
@@ -140,13 +199,15 @@ function RecursiveMenuItem({
         </CollapsibleTrigger>
         <CollapsibleContent className="overflow-hidden transition-[height,opacity] duration-200 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:duration-150 data-[state=open]:duration-200">
           <SidebarMenuSub className="ml-0.5 space-y-0.5 border-l border-sidebar-border/50 pl-3 py-1">
-            {item.items?.map((child: DocTreeItem) => (
+            {item.items?.map((child: DocTreeItem, index: number) => (
               <RecursiveMenuItem
-                key={child.title}
+                key={`${child.url}-${index}`}
                 item={child}
                 depth={depth + 1}
-                openSecondKey={openSecondKey}
-                setOpenSecondKey={setOpenSecondKey}
+                rootKey={rootKey}
+                itemId={`${child.url}-${index}`}
+                openSecondKeyByRoot={openSecondKeyByRoot}
+                setOpenSecondKeyForRoot={setOpenSecondKeyForRoot}
               />
             ))}
           </SidebarMenuSub>
@@ -157,18 +218,19 @@ function RecursiveMenuItem({
 }
 
 export function NavMain({ doctree }: { doctree: DocTreeItem[] }) {
-  const { openSecondKey, setOpenSecondKey } = useSecondLevelAccordion(doctree)
+  const { openSecondKeyByRoot, setOpenSecondKeyForRoot } = useSecondLevelAccordionByRoot(doctree)
 
   return (
     <SidebarGroup>
       <SidebarMenu className="mt-8 gap-1.5">
-        {doctree.map((item) => (
+        {doctree.map((item, index) => (
           <RecursiveMenuItem
-            key={item.title}
+            key={`${item.url}-${index}`}
             item={item}
             depth={0}
-            openSecondKey={openSecondKey}
-            setOpenSecondKey={setOpenSecondKey}
+            rootKey={`${item.url}-${index}`}
+            openSecondKeyByRoot={openSecondKeyByRoot}
+            setOpenSecondKeyForRoot={setOpenSecondKeyForRoot}
           />
         ))}
       </SidebarMenu>
