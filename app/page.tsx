@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import { Footer } from '@/components/Footer'
 import { Github, Globe, MapPin, FileText, Calendar, ArrowRight, Quote } from 'lucide-react'
 import { getAllPublishPostAPI } from '@/api/post'
 import { getActivePageConfigAPI } from '@/api/page'
