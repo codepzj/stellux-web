@@ -81,10 +81,6 @@ function MobileNav({ onClick }: { onClick: () => void }) {
             {item.label}
           </Link>
         ))}
-        <div className="px-2 py-1.5">
-          {/* 开发环境显示主题切换器 */}
-          {process.env.NODE_ENV === 'development' && <ThemeToggle />}
-        </div>
       </div>
     </div>
   )

@@ -1,45 +1,24 @@
 'use client'
 
-import Image from 'next/image'
+import { ThemeSwitcher } from '@/components/ThemeSwitcher'
+import { cn } from '@/lib/utils'
 
-export default function Footer() {
+export function Footer({ className, ...props }: React.ComponentProps<'footer'>) {
   return (
-    <footer className="max-w-3xl mx-auto w-full bg-transparent">
-      <div className="px-4 py-6 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-          <div className="flex items-center gap-1">
-            <Image src="/icp.png" alt="备案图标" width={14} height={14} />
-            <a
-              href="https://beian.miit.gov.cn/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
-            >
-              粤ICP备2024275864号-4
-            </a>
-          </div>
-          <div className="flex items-center gap-2">
-            <a
-              href="/rss.xml"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
-              title="RSS订阅"
-            >
-              RSS
-            </a>
-            <span className="text-gray-300">|</span>
-            <a
-              href="/atom.xml"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
-              title="Atom订阅"
-            >
-              Atom
-            </a>
-          </div>
-        </div>
+    <footer
+      role="contentinfo"
+      className={cn(
+        'mt-auto flex w-full items-center justify-between gap-4 border-t border-border/60 bg-background/80 px-4 py-3 text-sm text-muted-foreground backdrop-blur-sm',
+        className
+      )}
+      {...props}
+    >
+      <span className="shrink-0">
+        © {new Date().getFullYear()} Stellux
+      </span>
+      <div className="flex items-center gap-2">
+        <span className="hidden text-muted-foreground/80 sm:inline">Theme</span>
+        <ThemeSwitcher />
       </div>
     </footer>
   )

@@ -45,6 +45,11 @@ export default function BlogList() {
   const [loading, setLoading] = useState<boolean>(true)
   const loadingRef = useRef<boolean>(false)
 
+  // 每次进入博客页重置滚动条
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [])
+
   useEffect(() => {
     setLoading(true)
     async function fetchPosts() {
@@ -172,7 +177,7 @@ export default function BlogList() {
                       Array.from({ length: skeletonCount }).map((_, idx) => (
                         <Card
                           key={idx}
-                          className="border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none bg-white/90 dark:bg-gray-900/70 p-4 rounded-lg"
+                          className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 rounded-lg"
                         >
                           <div className="flex items-stretch gap-4 min-h-[120px]">
                             <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -206,7 +211,7 @@ export default function BlogList() {
                       posts.map((post) => (
                         <Card
                           key={post.id}
-                          className="border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none bg-white/90 dark:bg-gray-900/70 p-4 hover:bg-gray-50 dark:hover:bg-gray-900/65 cursor-pointer group rounded-lg relative"
+                          className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
                           onClick={() => router.push(`/blog/${post.alias}`)}
                         >
                           <CardContent className="p-0">

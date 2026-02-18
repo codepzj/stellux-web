@@ -3,6 +3,7 @@ import { Markdown } from '@/components/Md'
 import { Metadata } from 'next'
 import { Toc } from '@/components/Toc'
 import { BackToTop } from '@/components/SideTool/back-to-top'
+import { ScrollReset } from '@/components/ScrollReset'
 // import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
 import { formatDate, formatRelativeTime, estimateReadingTime } from '@/lib/time-utils'
 import { Calendar, Clock, BookOpen } from 'lucide-react'
@@ -21,7 +22,9 @@ export default async function BlogContent({ params }: Props) {
   const hasHeadings = /^##\s|^###\s/m.test(post.content)
 
   return (
-    <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
+    <>
+      <ScrollReset />
+      <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
       <div className="w-full lg:w-4/5 p-4">
         <div className="text-3xl font-bold font-mono py-4 mb-4">{post.title}</div>
 
@@ -61,7 +64,8 @@ export default async function BlogContent({ params }: Props) {
       )}
       <BackToTop />
       {/* <ScrollToComment /> */}
-    </div>
+      </div>
+    </>
   )
 }
 

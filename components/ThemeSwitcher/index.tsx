@@ -15,18 +15,18 @@ export const ThemeSwitcher = () => {
   }, [])
 
   return (
-    <div className="inline-flex items-center gap-1 rounded-full border bg-muted/50 p-1">
+    <div className="inline-flex items-center gap-0.5 rounded-full border bg-muted/50 p-0.5">
       {[
-        { key: 'light', icon: <SunIcon size={16} />, label: '浅色模式' },
-        { key: 'dark', icon: <MoonIcon size={16} />, label: '深色模式' },
-        { key: 'system', icon: <SystemIcon size={16} />, label: '跟随系统模式' },
+        { key: 'light', icon: <SunIcon size={14} />, label: '浅色模式' },
+        { key: 'dark', icon: <MoonIcon size={14} />, label: '深色模式' },
+        { key: 'system', icon: <SystemIcon size={14} />, label: '跟随系统模式' },
       ].map((item) => (
         <Button
           key={item.key}
           size="icon"
           variant={theme === item.key ? 'default' : 'ghost'}
           aria-label={item.label}
-          className={cn('h-8 w-8 rounded-full', !mounted && 'pointer-events-none opacity-60')}
+          className={cn('h-6 w-6 rounded-full', !mounted && 'pointer-events-none opacity-60')}
           onClick={() => setTheme(item.key)}
         >
           {item.icon}

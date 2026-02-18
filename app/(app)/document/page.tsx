@@ -15,7 +15,7 @@ import NextLink from 'next/link'
 export default function DocumentPage() {
   const [docList, setDocList] = useState<DocumentVO[]>([])
   const [loading, setLoading] = useState(true)
-  const skeletonCount = docList.length > 0 ? docList.length : 3
+  const skeletonCount = docList.length > 0 ? docList.length : 4
 
   const fetchData = async () => {
     setLoading(true)
@@ -59,7 +59,7 @@ export default function DocumentPage() {
                   ? Array.from({ length: skeletonCount }).map((_, idx) => (
                       <Card
                         key={idx}
-                        className="border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none bg-white/90 dark:bg-gray-900/70 p-4 rounded-lg"
+                        className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 rounded-lg"
                       >
                         <div className="flex items-stretch gap-4 min-h-[120px]">
                           {/* 左侧内容骨架屏 */}
@@ -91,7 +91,7 @@ export default function DocumentPage() {
                     ))
                   : docList.map((item) => (
                       <NextLink key={item.id} href={`/document/${item.alias}`} className="block">
-                        <Card className="border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none bg-white/90 dark:bg-gray-900/70 p-4 hover:bg-gray-50 dark:hover:bg-gray-900/65 cursor-pointer group rounded-lg">
+                        <Card className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg transition-colors duration-200">
                           <CardContent className="p-0">
                             <div className="flex items-stretch gap-4 min-h-[120px]">
                               {/* 内容区域 */}

@@ -27,17 +27,69 @@ function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
   return false
 }
 
-function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: number }) {
+// 二级手风琴: 全局只允许一个二级分组展开, 用 url 作为唯一 key
+function useSecondLevelAccordion(doctree: DocTreeItem[]) {
   const pathname = usePathname()
-  const hasChildren = item.items && item.items.length > 0
-
-  const shouldBeOpen = itemMatchesPath(item, pathname)
-  // 默认全部展开
-  const [open, setOpen] = useState(true)
+  // 找出当前路径所在的二级 key, 用于初始展开
+  const initialKey = (() => {
+    for (const root of doctree) {
+      if (!root.items) continue
+      for (const second of root.items) {
+        if (itemMatchesPath(second, pathname)) return second.url
+      }
+    }
+    return null
+  })()
+  const [openSecondKey, setOpenSecondKey] = useState<string | null>(() => initialKey)
 
   useEffect(() => {
-    if (shouldBeOpen) setOpen(true)
+    const key = (() => {
+      for (const root of doctree) {
+        if (!root.items) continue
+        for (const second of root.items) {
+          if (itemMatchesPath(second, pathname)) return second.url
+        }
+      }
+      return null
+    })()
+    if (key) setOpenSecondKey(key)
+  }, [pathname, doctree])
+
+  return { openSecondKey, setOpenSecondKey }
+}
+
+function RecursiveMenuItem({
+  item,
+  depth = 0,
+  openSecondKey,
+  setOpenSecondKey,
+}: {
+  item: DocTreeItem
+  depth?: number
+  openSecondKey: string | null
+  setOpenSecondKey: (key: string | null) => void
+}) {
+  const pathname = usePathname()
+  const hasChildren = item.items && item.items.length > 0
+  const shouldBeOpen = itemMatchesPath(item, pathname)
+
+  // 一级(depth 0): 可折叠，本地状态；二级(depth 1): 手风琴；更深(depth>=2): 本地状态
+  const isSecondLevel = depth === 1
+  const [openLocal, setOpenLocal] = useState(true)
+
+  useEffect(() => {
+    if (shouldBeOpen) setOpenLocal(true)
   }, [pathname, shouldBeOpen])
+
+  const open = isSecondLevel ? openSecondKey === item.url : openLocal
+
+  const handleOpenChange = (next: boolean) => {
+    if (isSecondLevel) {
+      setOpenSecondKey(next ? item.url : null)
+    } else {
+      setOpenLocal(next)
+    }
+  }
 
   if (!hasChildren) {
     return (
@@ -64,7 +116,7 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
   }
 
   return (
-    <Collapsible asChild open={open} onOpenChange={setOpen}>
+    <Collapsible asChild open={open} onOpenChange={handleOpenChange}>
       <SidebarMenuItem
         className={cn(
           'rounded-md',
@@ -80,16 +132,22 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
             <span className="transition-all duration-200">{item.title}</span>
             <ChevronRight
               className={cn(
-                'ml-auto transition-all duration-300 ease-in-out transform',
+                'ml-auto shrink-0 transition-transform duration-200 ease-out',
                 open && 'rotate-90'
               )}
             />
           </SidebarMenuButton>
         </CollapsibleTrigger>
-        <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0">
+        <CollapsibleContent className="overflow-hidden transition-[height,opacity] duration-200 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:duration-150 data-[state=open]:duration-200">
           <SidebarMenuSub className="ml-0.5 space-y-0.5 border-l border-sidebar-border/50 pl-3 py-1">
             {item.items?.map((child: DocTreeItem) => (
-              <RecursiveMenuItem key={child.title} item={child} depth={depth + 1} />
+              <RecursiveMenuItem
+                key={child.title}
+                item={child}
+                depth={depth + 1}
+                openSecondKey={openSecondKey}
+                setOpenSecondKey={setOpenSecondKey}
+              />
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
@@ -99,11 +157,19 @@ function RecursiveMenuItem({ item, depth = 0 }: { item: DocTreeItem; depth?: num
 }
 
 export function NavMain({ doctree }: { doctree: DocTreeItem[] }) {
+  const { openSecondKey, setOpenSecondKey } = useSecondLevelAccordion(doctree)
+
   return (
     <SidebarGroup>
       <SidebarMenu className="mt-8 gap-1.5">
         {doctree.map((item) => (
-          <RecursiveMenuItem key={item.title} item={item} depth={0} />
+          <RecursiveMenuItem
+            key={item.title}
+            item={item}
+            depth={0}
+            openSecondKey={openSecondKey}
+            setOpenSecondKey={setOpenSecondKey}
+          />
         ))}
       </SidebarMenu>
     </SidebarGroup>
