@@ -40,6 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <meta name="msvalidate.01" content="30CD55A935E75B69A1565E31EA21513B" />
         <meta name="author" content={seoConfig.author} />
+        <script defer src="https://umami.golangblog.com/script.js" data-website-id="5fe0127e-6b84-458d-8d3c-887e8ab18e36"></script>
       </head>
       <body className="min-h-screen bg-background antialiased w-full font-main">
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>{children}</Providers>
