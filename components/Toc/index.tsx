@@ -141,11 +141,11 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               data-toc-id={itemId}
               className={cn(
                 'block px-1.5 py-[3px] rounded-sm transition-all duration-200 transform-gpu',
-                'hover:bg-accent/30 hover:text-foreground hover:scale-[1.01]',
-                'dark:hover:bg-white/10 dark:text-zinc-400 dark:hover:text-white',
+                'text-primary hover:bg-accent/30 hover:text-foreground hover:scale-[1.01]',
+                'dark:text-zinc-200 dark:font-extrabold',
                 isActive
-                  ? 'bg-primary/10 text-primary font-medium scale-[1.02] pl-3'
-                  : 'text-muted-foreground'
+                  ? 'bg-primary/10  font-medium scale-[1.02] pl-3'
+                  : ''
               )}
               style={{ transformOrigin: 'left center' }}
             >
