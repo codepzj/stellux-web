@@ -86,3 +86,39 @@ $:
             docker pull ${IMAGE_TAG}
             docker tag ${IMAGE_TAG} ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:latest
             docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:latest
+        - name: resolve docker image
+          type: cnb:resolve
+          options:
+            key: build-docker-image
+
+    - name: deploy web and send message to feishu
+      stages:
+        - name: await docker image
+          type: cnb:await
+          options:
+            key: build-docker-image
+        - name: deploy web
+          # 引用ssh配置文件
+          imports: https://cnb.cool/codepzj/secret/-/blob/main/ssh.yml
+          image: cnbcool/ssh
+          settings:
+            host: $BJY_SSH_HOST
+            username: $BJY_SSH_USERNAME
+            key: $BJY_SSH_KEY
+            script: |
+              docker login docker.cnb.cool -u cnb -p ${MY_CNB_TOKEN}
+              docker pull docker.cnb.cool/codepzj/stellux-web:${CNB_BRANCH}
+              docker service update --image docker.cnb.cool/codepzj/stellux-web:${CNB_BRANCH} stellux-web
+              docker container prune -f
+              docker image prune -af
+        - name: send message to feishu
+          imports: https://cnb.cool/codepzj/secret/-/blob/main/feishu.yml
+          image: tencentcom/feishu-message
+          settings:
+            robot: $ROBOT
+            sign_secret: $SIGN_SECRET
+            msg_type: text
+            content: |
+              {
+                "text": "stellux-web构建并部署成功,构建分支:${CNB_BRANCH},构建时间:${CNB_BUILD_START_TIME},错误消息:${CNB_BUILD_FAILED_MSG},构建仓库:${CNB_REPO_SLUG},构建内容:${CNB_COMMITTER}:${CNB_COMMIT_MESSAGE},构建链接:${CNB_BUILD_WEB_URL}"
+              }
