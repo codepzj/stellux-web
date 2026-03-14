@@ -18,7 +18,7 @@ export async function getSEOConfig(): Promise<SEOConfig> {
     const { getActivePageConfigAPI } = await import('@/api/page')
     const response = await getActivePageConfigAPI('seo')
 
-    if (response.code !== 200) {
+    if (response.code >= 300) {
       throw new Error('Failed to fetch SEO config')
     }
 

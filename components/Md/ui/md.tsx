@@ -87,7 +87,7 @@ export default function Md({ content, className }: { content: string; className?
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="scroll-m-16 border-b border-gray-200 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
+                className="scroll-m-16 border-b border-gray-100 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
                 {...props}
               >
                 {children}
@@ -108,22 +108,22 @@ export default function Md({ content, className }: { content: string; className?
               </h4>
             ),
             p: ({ children }) => (
-              <p className="my-4 text-gray-800 dark:text-gray-200 text-base font-sans leading-9.5">
+              <p className="my-4 text-gray-800 dark:text-gray-100 text-[15px] font-sans leading-8">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="pl-5! mt-4 list-disc space-y-1 text-base text-gray-800 dark:text-gray-200">
+              <ul className="pl-5! mt-4 list-disc space-y-1 text-[15px] text-gray-800 dark:text-gray-100">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="pl-5! mt-4 list-decimal space-y-1 text-base text-gray-800 dark:text-gray-200">
+              <ol className="pl-5! mt-4 list-decimal space-y-1 text-[15px] text-gray-800 dark:text-gray-100">
                 {children}
               </ol>
             ),
             li: ({ children }) => (
-              <li className="my-2 text-base text-gray-800 dark:text-gray-200">
+              <li className="my-2 text-[15px] text-gray-800 dark:text-gray-100">
                 {children}
               </li>
             ),
@@ -187,7 +187,7 @@ export default function Md({ content, className }: { content: string; className?
 
               // 单行代码块
               return (
-                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-0.5! px-1 py-1 text-sm! text-gray-800 dark:text-gray-200 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
+                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-0.5! px-1 py-1 text-sm! text-gray-800 dark:text-gray-100 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
                   {children}
                 </code>
               )
