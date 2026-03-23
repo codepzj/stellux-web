@@ -5,7 +5,6 @@ export interface PostVO {
   title: string
   content: string
   description: string
-  author: string
   alias: string
   category: string
   tags: string[]

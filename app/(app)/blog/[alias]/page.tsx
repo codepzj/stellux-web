@@ -5,8 +5,9 @@ import { Toc } from '@/components/Toc'
 import { BackToTop } from '@/components/SideTool/back-to-top'
 import { ScrollReset } from '@/components/ScrollReset'
 // import { ScrollToComment } from '@/components/Tool/scroll-to-comment'
-import { formatDate, formatRelativeTime, estimateReadingTime } from '@/lib/time-utils'
-import { Calendar, Clock, BookOpen } from 'lucide-react'
+import { formatRelativeTime, estimateReadingTime } from '@/lib/time-utils'
+import { getSEOConfig } from '@/utils/seo'
+import { Clock, BookOpen } from 'lucide-react'
 
 type Props = {
   params: Promise<{ alias: string }>
@@ -71,9 +72,10 @@ export default async function BlogContent({ params }: Props) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { alias } = await params
-  const post = await getPostByAliasAPI(alias).then((res) => {
-    return res.data
-  })
+  const [post, seoConfig] = await Promise.all([
+    getPostByAliasAPI(alias).then((res) => res.data),
+    getSEOConfig(),
+  ])
 
   const title = post.title
   const description = post.description
@@ -98,7 +100,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: [image],
     },
-    authors: [{ name: post.author }],
+    authors: [{ name: seoConfig.author }],
     metadataBase: new URL(url),
   }
 }
