@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
-import { Github, Globe, MapPin, FileText, Calendar, ArrowRight, Quote } from 'lucide-react'
+import { GitPullRequest, Globe, MapPin, FileText, Calendar, ArrowRight, Quote } from 'lucide-react'
 import { getAllPublishPostAPI } from '@/api/post'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
@@ -102,7 +102,7 @@ export default async function Page() {
                         rel="noreferrer noopener"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity"
                       >
-                        <Github className="w-3.5 h-3.5" />
+                        <GitPullRequest className="w-3.5 h-3.5" />
                         GitHub
                       </a>
                     )}
@@ -199,7 +199,7 @@ export default async function Page() {
           {shouldShowRepositories && repositories.length > 0 && (
             <section className="space-y-4">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <Github className="w-5 h-5" />
+                <GitPullRequest className="w-5 h-5" />
                 开源项目
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -212,7 +212,7 @@ export default async function Page() {
                     className="group p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-white dark:bg-gray-900/50 transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <Github className="w-4 h-4 text-gray-400" />
+                      <GitPullRequest className="w-4 h-4 text-gray-400" />
                       <span className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
                         {repo.name}
                       </span>
