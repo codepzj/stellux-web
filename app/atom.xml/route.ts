@@ -1,25 +1,32 @@
 import { NextRequest } from 'next/server'
 import { getAllPublishPostAPI } from '@/api/post'
+import { getConfigMapAPI } from '@/api/config'
 
 export async function GET(request: NextRequest) {
   try {
     const posts = await getAllPublishPostAPI()
+    const config = await getConfigMapAPI()
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
+
+
+    const SEOTitle = config?.data?.seo.Content.SEOTitle
+    const SEOAuthor = config?.data?.seo.Content.SEOAuthor
+    const SEODescription = config?.data?.seo.Content.SEODescription
 
     // 确保 posts.data 存在且为数组，同时检查 API 返回状态
     const postsData = posts?.code === 200 && posts?.data ? posts.data : []
 
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Gopher</title>
+  <title>${SEOTitle}</title>
   <link href="${siteUrl}" />
   <link href="${siteUrl}/atom.xml" rel="self" type="application/atom+xml" />
   <id>${siteUrl}/</id>
   <updated>${new Date().toISOString()}</updated>
   <author>
-    <name>Gopher</name>
+    <name>${SEOAuthor}</name>
   </author>
-  <subtitle>Gopher的个人技术博客,记录Golang学习与开发实践。</subtitle>
+  <subtitle>${SEODescription}</subtitle>
   ${postsData
     .map(
       (post) => `

@@ -24,7 +24,7 @@ export const ThemeSwitcher = () => {
         <Button
           key={item.key}
           size="icon"
-          variant={theme === item.key ? 'default' : 'ghost'}
+          variant={mounted && theme === item.key ? 'default' : 'ghost'}
           aria-label={item.label}
           className={cn('h-6 w-6 rounded-full', !mounted && 'pointer-events-none opacity-60')}
           onClick={() => setTheme(item.key)}

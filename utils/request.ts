@@ -1,6 +1,10 @@
 import { Response } from '@/types/dto'
 
-const baseUrl = process.env.NEXT_PUBLIC_PROJECT_API || 'http://localhost:9001'
+const baseUrl = process.env.NEXT_PUBLIC_PROJECT_API
+
+if (!baseUrl) {
+  throw new Error('NEXT_PUBLIC_PROJECT_API is not set')
+}
 
 interface RequestOptions {
   params?: Record<string, string>
@@ -35,7 +39,7 @@ export async function request<T>(
     const res = await fetch(fullUrl, fetchOptions)
     return await res.json()
   } catch (err) {
-    console.error('请求异常:', err)
-    return { code: 500, error: '网络错误' } as Response<T>
+    console.error('request error:', err)
+    return { code: 500, error: 'network error' } as Response<T>
   }
 }
