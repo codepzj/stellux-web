@@ -59,7 +59,7 @@ export default function DocumentPage() {
                   ? Array.from({ length: skeletonCount }).map((_, idx) => (
                       <Card
                         key={idx}
-                        className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 rounded-lg"
+                        className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
                       >
                         <div className="flex items-stretch gap-4 min-h-[120px]">
                           {/* 左侧内容骨架屏 */}
@@ -91,7 +91,7 @@ export default function DocumentPage() {
                     ))
                   : docList.map((item) => (
                       <NextLink key={item.id} href={`/document/${item.alias}`} className="block">
-                        <Card className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg transition-colors duration-200">
+                        <Card className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg transition-colors duration-200">
                           <CardContent className="p-0">
                             <div className="flex items-stretch gap-4 min-h-[120px]">
                               {/* 内容区域 */}

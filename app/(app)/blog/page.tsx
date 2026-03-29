@@ -20,8 +20,6 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from '@/components/ui/pagination'
 
 export default function BlogList() {
@@ -177,7 +175,7 @@ export default function BlogList() {
                       Array.from({ length: skeletonCount }).map((_, idx) => (
                         <Card
                           key={idx}
-                          className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 rounded-lg"
+                          className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
                         >
                           <div className="flex items-stretch gap-4 min-h-[120px]">
                             <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -211,7 +209,7 @@ export default function BlogList() {
                       posts.map((post) => (
                         <Card
                           key={post.id}
-                          className="border border-gray-200 dark:border-border shadow-sm dark:shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
+                          className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
                           onClick={() => router.push(`/blog/${post.alias}`)}
                         >
                           <CardContent className="p-0">
