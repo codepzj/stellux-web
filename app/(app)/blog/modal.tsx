@@ -45,7 +45,7 @@ export function SearchModal() {
       className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4"
       role="dialog"
       aria-modal="true"
-      aria-label="搜索博客"
+      aria-label="search..."
     >
       {/* 遮罩：点击关闭 */}
       <div
@@ -56,7 +56,7 @@ export function SearchModal() {
 
       {/* 弹窗面板 */}
       <div
-        className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-lg border bg-background shadow-lg overflow-hidden"
+        className="relative w-full max-w-xl max-h-[85vh] flex flex-col rounded-lg border bg-background shadow-sm overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 搜索输入区 */}
@@ -66,11 +66,11 @@ export function SearchModal() {
             <input
               ref={inputRef}
               type="search"
-              placeholder="输入关键词搜索..."
+              placeholder="search with keywords..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="h-8 flex-1 min-w-0 border-0 bg-transparent px-0 text-base text-foreground placeholder:text-muted-foreground outline-none focus:ring-0"
-              aria-label="搜索关键词"
+              aria-label="search keywords"
             />
             <kbd className="pointer-events-none shrink-0 rounded bg-muted px-2 py-0.5 text-[10px] text-muted-foreground border">
               ESC
@@ -114,7 +114,7 @@ export function SearchModal() {
             !loading &&
             results.length === 0 && (
               <div className="text-center py-8 text-muted-foreground text-sm">
-                暂无搜索结果
+                no results
               </div>
             )
           )}

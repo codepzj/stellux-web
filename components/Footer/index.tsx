@@ -14,7 +14,7 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
       {...props}
     >
       <span className="shrink-0">
-        © {new Date().getFullYear()} Stellux
+        © {new Date().getFullYear()} stellux
       </span>
       <div className="flex items-center gap-2">
         <span className="hidden text-muted-foreground/80 sm:inline">Theme</span>

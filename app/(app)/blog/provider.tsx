@@ -47,10 +47,10 @@ export const Provider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [])
 
-  // 防抖搜索，延迟800ms，至少2个字符才搜索
+  // 防抖搜索，延迟800ms，至少1个字符才搜索
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      if (keyword.trim().length >= 2) {
+      if (keyword.trim().length >= 1) {
         searchPosts(keyword)
       } else {
         setResults([])

@@ -11,7 +11,7 @@ type SearchProps = React.HTMLAttributes<HTMLButtonElement> & {
 
 export const Search = ({
   className,
-  placeholder = '搜索博客',
+  placeholder = 'search...',
   children,
   ...props
 }: SearchProps) => {
@@ -39,8 +39,9 @@ export const Search = ({
         }
       }}
       className={cn(
-        'relative flex h-10 w-full items-center gap-2 rounded-md border border-input bg-transparent px-3 text-sm text-muted-foreground shadow-xs transition-colors',
-        'hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
+        'relative flex h-10 w-full items-center gap-2 rounded-md border border-input bg-transparent px-3 text-sm text-accent-foreground shadow-xs transition-colors',
+        'hover:bg-accent',
+        'dark:border-input',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
