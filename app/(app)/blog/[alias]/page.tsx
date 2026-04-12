@@ -26,36 +26,8 @@ export default async function BlogContent({ params }: Props) {
     <>
       <ScrollReset />
       <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
-      <div className="w-full lg:w-4/5 p-4">
-        <div className="text-3xl font-bold font-mono py-4 mb-4">{post.title}</div>
-
-        {/* 文章元信息 */}
-        <div className="flex items-center gap-3 text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-8 px-2">
-          <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">
-                {formatRelativeTime(post.updated_at)}
-              </span>
-              <span className="hidden md:inline">
-                更新于 {formatRelativeTime(post.updated_at)}
-              </span>
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <BookOpen className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400" />
-            <span className="font-medium">
-              <span className="md:hidden">
-                {estimateReadingTime(post.content)}min
-              </span>
-              <span className="hidden md:inline">
-                约 {estimateReadingTime(post.content)} 分钟阅读
-              </span>
-            </span>
-          </div>
-        </div>
-
-        <div className="h-4" />
+      <div className="w-full lg:w-4/5 px-4">
+        <div className="text-3xl font-bold font-mono py-4 mb-8">{post.title}</div>
         <Markdown className="wrap-break-word overflow-x-auto" content={post.content} />
       </div>
       {hasHeadings && (

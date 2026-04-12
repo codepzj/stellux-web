@@ -5,7 +5,7 @@ import * as React from 'react'
 import { useEffect, useState, useMemo } from 'react'
 import { getTableOfContents, TableOfContents } from './content'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, List } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface TocProps {
@@ -15,7 +15,7 @@ interface TocProps {
 
 export const ScrollToc = ({ content, className }: TocProps) => {
   return (
-    <div className="w-48">
+    <div className="w-full min-w-48 min-h-0">
       <Toc content={content} className={className} />
     </div>
   )
@@ -61,8 +61,9 @@ export function Toc({ content, className }: TocProps) {
         onClick={() => setCollapsed(!collapsed)}
         className="flex justify-between items-center mb-3 px-2 cursor-pointer select-none"
       >
-        <div className="text-muted-foreground dark:text-zinc-400 font-medium tracking-wide sticky top-0 right-0">
-          目录
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 font-semibold tracking-wide text-muted-foreground dark:text-zinc-400 sticky top-0 right-0">
+          <List className="size-3.5 shrink-0 opacity-80" aria-hidden />
+          <span className="truncate">大纲</span>
         </div>
         <button
           className="transition-transform duration-300 text-muted-foreground hover:text-foreground"
@@ -140,12 +141,10 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               href={item.url}
               data-toc-id={itemId}
               className={cn(
-                'block px-1.5 py-[3px] rounded-sm transition-all duration-200 transform-gpu',
-                'text-primary hover:bg-accent/30 hover:text-foreground hover:scale-[1.01]',
-                'dark:text-zinc-200 dark:font-extrabold',
-                isActive
-                  ? 'bg-primary/10  font-medium scale-[1.02] pl-3'
-                  : ''
+                'block px-1.5 py-[3px] rounded-sm font-normal transition-all duration-200 transform-gpu',
+                'text-primary hover:bg-primary/10 hover:text-foreground hover:scale-[1.01]',
+                'dark:text-zinc-200',
+                isActive && 'bg-primary/10 font-semibold scale-[1.02] pl-3'
               )}
               style={{ transformOrigin: 'left center' }}
             >
@@ -154,8 +153,8 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               )}
               <span
                 className={cn(
-                  level === 1 ? 'font-medium text-[13px]' : 'text-[12px]',
-                  isActive && 'text-primary'
+                  level === 1 ? 'text-[13px]' : 'text-[12px]',
+                  isActive ? 'text-primary' : 'font-normal'
                 )}
               >
                 {item.title}

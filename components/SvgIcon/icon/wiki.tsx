@@ -1,14 +1,19 @@
+import { cn } from '@/lib/utils'
 import { IconSvgProps } from '@/types'
 
-export const WikiIcon = ({ size = 24, width, height }: IconSvgProps) => (
+const CENTER_OFFSET = 'translate(2 2.05)'
+
+export const WikiIcon = ({ size = 24, width, height, className, ...props }: IconSvgProps) => (
   <svg
-    height={size || height}
-    viewBox="0 0 24 24"
-    width={size || width}
     xmlns="http://www.w3.org/2000/svg"
+    width={width ?? size}
+    height={height ?? size}
+    viewBox="0 0 24 24"
     data-name="BookTypeDefault"
+    className={cn('block max-h-full max-w-full shrink-0', className)}
+    {...props}
   >
-    <g fill="none" fillRule="evenodd">
+    <g fill="none" fillRule="evenodd" transform={CENTER_OFFSET}>
       <path
         d="M4.75 1.267h10.5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4.75a2 2 0 0 1-2-2v-14a2 2 0 0 1 2-2Z"
         fill="#C4DCFF"
