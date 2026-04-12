@@ -9,8 +9,6 @@ import { DocumentContentVO } from '@/types/document-content'
 import { Metadata } from 'next'
 import { SidebarToggle } from '@/components/SideTool/sidebar-toggle'
 import { BackToTop } from '@/components/SideTool/back-to-top'
-import { Calendar, Clock, BookOpen } from 'lucide-react'
-import { formatRelativeTime, formatDate, estimateReadingTime } from '@/lib/time-utils'
 
 interface DocPageProps {
   params: Promise<{ slug: string[] }> // 路径参数
@@ -44,15 +42,6 @@ export default async function DocPage({ params }: DocPageProps) {
     documentContent = documentContentList.find(
       (item) => item.alias === subAlias
     ) as DocumentContentVO
-  }
-
-  // 检查内容是否包含二级(##)或三级(###)标题
-  const hasHeadings = () => {
-    if (isRoot) {
-      return false
-    } else {
-      return /^##\s|^###\s/m.test(documentContent?.content || '')
-    }
   }
 
   const treeItems = convertToDocumentTreeData(documentContentList, rootAlias)
