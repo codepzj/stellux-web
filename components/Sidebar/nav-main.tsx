@@ -19,7 +19,6 @@ import {
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
-// 判断当前 item 或其子孙是否匹配当前路径, 用于判断当前路径是否在 sidebar 中
 function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
   if (item.url === pathname) return true
   if (item.items) {
@@ -28,7 +27,6 @@ function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
   return false
 }
 
-/** 折叠箭头 / 占位：有子级放 Chevron，叶子留空，与「目录」首列同宽，标题左缘对齐 */
 function TreeChevronCell({ children }: { children?: React.ReactNode }) {
   return (
     <span className="flex h-4 w-[15px] shrink-0 items-center justify-center text-sidebar-foreground/55">
@@ -107,7 +105,6 @@ function RecursiveMenuItem({
   item: DocTreeItem
   depth?: number
   rootKey: string
-  /** 当前项在兄弟中的唯一 id(url + 索引), 用于二级手风琴, 避免同 url 多节点同时展开 */
   itemId?: string
   openSecondKeyByRoot: Record<string, string | null>
   setOpenSecondKeyForRoot: (rootKey: string, secondKey: string | null) => void
@@ -117,7 +114,7 @@ function RecursiveMenuItem({
   const shouldBeOpen = itemMatchesPath(item, pathname)
 
   const isSecondLevel = depth === 1
-  const [openLocal, setOpenLocal] = useState(false)
+  const [openLocal, setOpenLocal] = useState(depth === 0)
 
   useEffect(() => {
     if (!isSecondLevel && shouldBeOpen) {
@@ -238,15 +235,24 @@ function RecursiveMenuItem({
 }
 
 export function NavMain({ doctree }: { doctree: DocTreeItem[] }) {
+  const pathname = usePathname()
   const { openSecondKeyByRoot, setOpenSecondKeyForRoot } = useSecondLevelAccordionByRoot(doctree)
+  const [, documentBase, rootAlias] = pathname.split('/')
+  const rootDocumentUrl =
+    documentBase === 'document' && rootAlias ? `/document/${rootAlias}` : '/document'
 
   return (
     <SidebarGroup className="gap-1">
-      <SidebarGroupLabel className="flex h-9 w-full min-w-0 items-center gap-1.5 px-2 text-sm font-semibold text-sidebar-foreground">
-        <span className="flex h-4 w-[15px] shrink-0 items-center justify-center text-sidebar-foreground/55 [&_svg]:size-3.5">
-          <List aria-hidden />
-        </span>
-        <span className="min-w-0 flex-1 truncate">目录</span>
+      <SidebarGroupLabel className="h-9 px-2 text-sm font-semibold text-sidebar-foreground">
+        <Link
+          href={rootDocumentUrl}
+          className="flex h-full w-full min-w-0 items-center gap-1.5 rounded-md pr-1.5 transition-colors hover:bg-primary/10 hover:text-foreground"
+        >
+          <TreeChevronCell>
+            <List className="size-3.5" aria-hidden />
+          </TreeChevronCell>
+          <span className="min-w-0 flex-1 truncate">目录</span>
+        </Link>
       </SidebarGroupLabel>
       <SidebarMenu className="gap-1.5">
         {doctree.map((item, index) => (

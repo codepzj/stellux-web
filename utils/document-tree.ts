@@ -2,10 +2,12 @@ import { DocumentContentVO } from '@/types/document-content'
 import { LucideIcon } from 'lucide-react'
 
 export interface DocTreeItem {
+  id: string
   title: string
   url: string
   sort: number
   created_at: string
+  isDir: boolean
   icon?: LucideIcon
   isActive?: boolean
   items?: DocTreeItem[]
@@ -22,10 +24,12 @@ export function convertToDocumentTreeData(data: DocumentContentVO[], alias: stri
   // 先创建所有节点
   for (const doc of data) {
     map.set(doc.id, {
+      id: doc.id,
       title: doc.title,
       url: `/document/${alias}/${doc.alias}`,
       sort: doc.sort,
       created_at: doc.created_at,
+      isDir: doc.is_dir,
     })
   }
 

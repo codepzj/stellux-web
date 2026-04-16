@@ -9,9 +9,79 @@ import { DocumentContentVO } from '@/types/document-content'
 import { Metadata } from 'next'
 import { SidebarToggle } from '@/components/SideTool/sidebar-toggle'
 import { BackToTop } from '@/components/SideTool/back-to-top'
+import Link from 'next/link'
+import type { DocTreeItem } from '@/utils/document-tree'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface DocPageProps {
   params: Promise<{ slug: string[] }> // 路径参数
+}
+
+type NavPage = { title: string; url: string; isDir: boolean }
+
+function flattenDocTree(items: DocTreeItem[]): Array<NavPage> {
+  const result: NavPage[] = []
+  const walk = (nodes: DocTreeItem[]) => {
+    for (const node of nodes) {
+      result.push({ title: node.title, url: node.url, isDir: node.isDir })
+      if (node.items?.length) walk(node.items)
+    }
+  }
+  walk(items)
+  return result
+}
+
+function RootDocTreeList({
+  nodes,
+  activeUrl,
+  depth = 0,
+}: {
+  nodes: DocTreeItem[]
+  activeUrl: string
+  depth?: number
+}) {
+  if (!nodes.length) return null
+
+  return (
+    <ul className={depth === 0 ? 'border-l border-border/60 pl-4 space-y-2' : 'pl-4 space-y-1'}>
+      {nodes.map((node) => {
+        if (node.isDir) {
+          return (
+            <li key={node.id} className="space-y-1">
+              <details open className="group">
+                <summary className="list-none cursor-pointer select-none flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                  <ChevronRight className="size-3 shrink-0 text-muted-foreground transition-transform group-open:text-foreground group-open:rotate-90" />
+                  <span>{node.title}</span>
+                </summary>
+                {node.items?.length ? (
+                  <div className="mt-2">
+                    <RootDocTreeList nodes={node.items} activeUrl={activeUrl} depth={depth + 1} />
+                  </div>
+                ) : null}
+              </details>
+            </li>
+          )
+        }
+
+        const isActive = node.url === activeUrl
+
+        return (
+          <li key={node.id}>
+            <Link
+              href={node.url}
+              className={[
+                'block text-sm px-2 py-1 rounded-md transition-colors',
+                'hover:bg-primary/10',
+                isActive ? 'bg-primary/10 font-semibold text-primary' : 'text-foreground/90',
+              ].join(' ')}
+            >
+              {node.title}
+            </Link>
+          </li>
+        )
+      })}
+    </ul>
+  )
 }
 
 export default async function DocPage({ params }: DocPageProps) {
@@ -45,6 +115,31 @@ export default async function DocPage({ params }: DocPageProps) {
   }
 
   const treeItems = convertToDocumentTreeData(documentContentList, rootAlias)
+  const currentUrl = isRoot ? `/document/${rootAlias}` : `/document/${rootAlias}/${subAlias}`
+
+  const flattenedTree = flattenDocTree(treeItems)
+  const orderedPages = flattenedTree.filter(
+    (page, idx, arr) => arr.findIndex((p) => p.url === page.url) === idx
+  )
+
+  const currentIndex = isRoot ? -1 : orderedPages.findIndex((p) => p.url === currentUrl)
+  let prevPage: NavPage | undefined
+  let nextPage: NavPage | undefined
+
+  if (currentIndex >= 0) {
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      if (!orderedPages[i].isDir) {
+        prevPage = orderedPages[i]
+        break
+      }
+    }
+    for (let i = currentIndex + 1; i < orderedPages.length; i++) {
+      if (!orderedPages[i].isDir) {
+        nextPage = orderedPages[i]
+        break
+      }
+    }
+  }
 
   return (
     <SidebarProvider style={{ '--sidebar-width': '256px' } as React.CSSProperties}>
@@ -55,14 +150,69 @@ export default async function DocPage({ params }: DocPageProps) {
       />
       <SidebarInset>
         <div className="w-full flex flex-col md:flex-row justify-center gap-2 mt-8">
-          <div className="w-full lg:w-4/5 md:max-w-xl lg:max-w-3xl md:mr-4 mb-20 px-4">
+          <div className="w-full lg:w-4/5 md:max-w-xl lg:max-w-3xl md:mr-4 mb-20 px-4 flex flex-col min-h-[calc(100vh-14rem)]">
             <div className="text-3xl font-bold font-mono py-4 mb-8">
               {isRoot ? document?.title || '' : documentContent?.title || ''}
             </div>
-            <Markdown
-              className="pl-2 wrap-break-word overflow-x-auto"
-              content={isRoot ? document?.description || '' : documentContent?.content || ''}
-            />
+            <div className="flex-1">
+              {isRoot ? (
+                <div className="mt-4">
+                  <div className="text-lg font-bold">👋  欢迎来到知识库</div>
+                  <div className="mt-2">知识库就像书一样，让多篇文档结构化，方便知识的创作与沉淀</div>
+                  <div className="mt-8"></div>
+                  <RootDocTreeList nodes={treeItems} activeUrl={currentUrl} />
+                </div>
+              ) : (
+                <Markdown
+                  className="pl-2 wrap-break-word overflow-x-auto"
+                  content={documentContent?.content || ''}
+                />
+              )}
+            </div>
+
+            {!isRoot && (prevPage || nextPage) && (
+              <div className="mt-28">
+                <div
+                  className={[
+                    'grid grid-cols-1 gap-4 sm:grid-cols-2',
+                    prevPage && !nextPage ? 'sm:*:first:col-start-1' : '',
+                    !prevPage && nextPage ? 'sm:*:first:col-start-2' : '',
+                  ].join(' ')}
+                >
+                  {prevPage ? (
+                    <Link
+                      href={prevPage.url}
+                      className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 hover:bg-primary/10 hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <ChevronLeft className="size-4 text-muted-foreground group-hover:text-foreground" />
+                        <span className="text-xs text-muted-foreground group-hover:text-foreground">
+                          上一页
+                        </span>
+                      </div>
+                      <div className="mt-2 text-sm font-medium line-clamp-2">{prevPage.title}</div>
+                    </Link>
+                  ) : null}
+
+                  {nextPage ? (
+                    <Link
+                      href={nextPage.url}
+                      className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 hover:bg-primary/10 hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-xs text-muted-foreground group-hover:text-foreground">
+                          下一页
+                        </span>
+                        <ChevronRight className="size-4 text-muted-foreground group-hover:text-foreground" />
+                      </div>
+                      <div className="mt-2 text-sm font-medium line-clamp-2 text-right">
+                        {nextPage.title}
+                      </div>
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+            )}
           </div>
           <div className="hidden lg:block sticky top-8 h-[calc(100vh-1rem)] w-48 min-w-48 shrink-0 flex-none">
             <ScrollToc
