@@ -243,13 +243,13 @@ export function NavMain({ doctree }: { doctree: DocTreeItem[] }) {
 
   return (
     <SidebarGroup className="gap-1">
-      <SidebarGroupLabel className="h-9 px-2 text-sm font-semibold text-sidebar-foreground">
+      <SidebarGroupLabel className="h-9 text-sm px-0 font-semibold text-sidebar-foreground">
         <Link
           href={rootDocumentUrl}
-          className="flex h-full w-full min-w-0 items-center gap-1.5 rounded-md pr-1.5 transition-colors hover:bg-primary/10 hover:text-foreground"
+          className="flex h-full w-full min-w-0 items-center gap-2 rounded-md pr-1.5 transition-colors hover:bg-primary/10 hover:text-foreground"
         >
           <TreeChevronCell>
-            <List className="size-3.5" aria-hidden />
+            <List size={28} className="ml-2" aria-hidden />
           </TreeChevronCell>
           <span className="min-w-0 flex-1 truncate">目录</span>
         </Link>
