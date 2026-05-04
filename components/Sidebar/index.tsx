@@ -16,12 +16,12 @@ export async function DocSidebar({
 }) {
   return (
     <Sidebar collapsible="offcanvas" variant="sidebar" className={className}>
-      <SidebarHeader className="px-3 pt-4 pb-3 gap-3 rounded-b-xl bg-sidebar/30 transition-colors duration-200">
-        <SidebarMenu className="gap-2">
+      <SidebarHeader className="px-1 pt-4 pb-3 rounded-b-xl bg-sidebar/30 transition-colors duration-200">
+        <SidebarMenu>
           <SidebarMenuItem>
-            <div>
+            <div className="mt-2">
               <DocTitle docTitle={docTitle} />
-              <div className="mt-4 h-px min-w-0 bg-sidebar-border/50" aria-hidden />
+              <div className="mt-2 h-px min-w-0" aria-hidden />
             </div>
           </SidebarMenuItem>
         </SidebarMenu>
