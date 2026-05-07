@@ -59,7 +59,12 @@ export function ArticleDescriptionTypewriter({ text, className }: Props) {
   }, [full])
 
   return (
-    <p className={cn('mt-6 flex gap-3 text-left text-sm leading-relaxed md:mt-7 md:text-[15px] md:leading-relaxed', className)}>
+    <p
+      className={cn(
+        'mt-6 flex gap-3 text-left text-sm leading-relaxed md:mt-7 md:text-[15px] md:leading-relaxed',
+        className
+      )}
+    >
       <Sparkles
         className="mt-1 size-4 shrink-0 text-primary/40 md:mt-1.5"
         aria-hidden

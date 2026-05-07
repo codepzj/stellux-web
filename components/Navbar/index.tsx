@@ -8,31 +8,22 @@ import { SunIcon, MoonIcon } from '@/components/SvgIcon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
+import { SITE_NAV_LINKS, isSiteNavActive } from '@/lib/site-nav'
 import './index.css'
-
-const NAV_LINKS = [
-  { href: '/blog', label: 'Posts' },
-  { href: '/document', label: 'Docs' },
-  { href: '/about', label: 'About' },
-  { href: '/friends', label: 'Friends' },
-]
-
 
 function DesktopNav() {
   const pathname = usePathname()
-  const currentPath = pathname.split('/')[1] || '/'
 
   return (
     <>
       <nav className="hidden w-full md:flex items-center justify-end space-x-6">
-        {NAV_LINKS.map((item) => {
-          const isActive =
-            currentPath === item.href.split('/')[1] || (currentPath === '/' && item.href === '/')
+        {SITE_NAV_LINKS.map((item) => {
+          const isActive = isSiteNavActive(pathname, item.href)
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[14px] font-medium navbar-link ${
+              className={`cursor-pointer text-[14px] font-medium navbar-link transition-colors duration-200 ${
                 isActive
                   ? 'text-foreground nav-link-active'
                   : 'text-gray-700 hover:text-foreground dark:text-zinc-200 dark:hover:text-white'
@@ -71,12 +62,12 @@ function MobileNav({ onClick }: { onClick: () => void }) {
   return (
     <div className="fixed inset-x-0 top-14 z-30 bg-white/90 dark:bg-black/70 border-b border-gray-200/60 dark:border-white/10">
       <div className="flex flex-col space-y-3 px-4 py-3">
-        {NAV_LINKS.map((item) => (
+        {SITE_NAV_LINKS.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             onClick={onClick}
-            className="px-2 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-100 hover:text-foreground transition-colors"
+            className="cursor-pointer px-2 py-1.5 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-foreground dark:text-gray-100"
           >
             {item.label}
           </Link>
