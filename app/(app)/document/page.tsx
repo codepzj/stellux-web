@@ -113,7 +113,8 @@ export default function DocumentPage() {
                                   {/* 显示文档类型 */}
                                   <Badge
                                     variant="secondary"
-                                    className="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 cursor-pointer"
+                                    labelRole="category"
+                                    className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 cursor-pointer"
                                   >
                                     <FileText className="h-3 w-3 mr-1" />
                                     文档

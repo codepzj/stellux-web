@@ -1,11 +1,12 @@
-:root {
-  --font-sans:
-    "Chinese Quote", "Segoe UI", "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "Geist Mono", Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-}
+/* next/font 在 html 上注入 --font-sans-sc / --font-serif-sc / --font-mono-jb */
 
 @theme {
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans:
+    var(--font-sans-sc), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif:
+    var(--font-serif-sc), "Source Han Serif SC", "Songti SC", "STSong", "SimSun",
+    "Noto Serif SC", serif;
+  --font-mono: var(--font-mono-jb), ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas,
+    monospace;
 }

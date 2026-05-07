@@ -51,11 +51,11 @@ export default function FriendCard({ friend }: Props) {
           </div>
         </CardHeader>
         <CardFooter className="flex items-center gap-2 pt-2">
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" labelRole="category">
             <Globe className="h-3 w-3 mr-1" />
             {typeLabel}
           </Badge>
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" labelRole="meta">
             <ExternalLink className="h-3 w-3 mr-1" />
             访问
           </Badge>

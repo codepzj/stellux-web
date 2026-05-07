@@ -35,7 +35,8 @@ export function BlogPostCard({ post }: { post: PostVO }) {
               {post.category && (
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 cursor-pointer"
+                  labelRole="category"
+                  className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation()
                     router.push(`/blog?${buildBlogListQuery(1, undefined, post.category)}`)
@@ -49,7 +50,8 @@ export function BlogPostCard({ post }: { post: PostVO }) {
                 <Badge
                   key={i}
                   variant="outline"
-                  className="text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
+                  labelRole="tag"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation()
                     router.push(`/blog?${buildBlogListQuery(1, tag, undefined)}`)
@@ -85,7 +87,8 @@ export function BlogPostCard({ post }: { post: PostVO }) {
             <div>
               <Badge
                 variant="outline"
-                className="text-xs text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                labelRole="meta"
+                className="text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
               >
                 <Calendar className="h-3 w-3 mr-1" />
                 {formatRelativeTime(post.created_at)}

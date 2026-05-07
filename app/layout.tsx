@@ -3,6 +3,7 @@ import '@/global.css'
 import { Providers } from './providers'
 import { Metadata } from 'next'
 import { generatePageMetadata, getSEOConfig } from '@/utils/seo'
+import { fontVariables } from '@/lib/fonts'
 
 // 布局组件
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -10,7 +11,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const seoConfig = await getSEOConfig()
 
   return (
-    <html suppressHydrationWarning lang="zh-CN">
+    <html suppressHydrationWarning lang="zh-CN" className={fontVariables}>
       <head>
         <link
           rel="icon"
@@ -46,7 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           data-website-id="cebf4bfc-7bdd-4401-bcc2-cacea14b86c5"
         ></script>
       </head>
-      <body className="min-h-screen bg-background antialiased w-full font-main">
+      <body className="min-h-screen bg-background antialiased w-full font-sans">
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>{children}</Providers>
       </body>
     </html>

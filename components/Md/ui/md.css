@@ -136,12 +136,14 @@
   background-color: transparent; /* 让全局背景透出 */
   line-height: 1.85; /* 再提升行高，增强可读性 */
   word-wrap: break-word;
+  font-feature-settings: 'kern' 1;
+  text-rendering: optimizeLegibility;
 }
 
 /* 提升段落可读性与间距 */
 .markdown-body p {
   margin: 0.8em 0 1em;
-  letter-spacing: 0.1px;
+  letter-spacing: 0.02em;
 }
 
 /* 标题在深色下更清晰 */
@@ -159,10 +161,15 @@
   color: #9ec1ff;
 }
 
-/* 代码字号稍大一点，便于阅读 */
+/* 代码字号稍大一点，便于阅读；等宽与正文衬线区分 */
 .markdown-body code,
 .markdown-body pre {
   font-size: 0.95rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.markdown-body pre code {
+  font-family: inherit;
 }
 
 /* 图片居中 */

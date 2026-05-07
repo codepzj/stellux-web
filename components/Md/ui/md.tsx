@@ -79,7 +79,12 @@ export default function Md({ content, className }: { content: string; className?
 
   return (
     <PhotoProvider>
-      <article className={cn('markdown-body overflow-y-hidden dark:font-bold', className)}>
+      <article
+        className={cn(
+          'markdown-body overflow-y-hidden font-serif dark:font-bold text-pretty',
+          className
+        )}
+      >
         <ReactMarkdown
           rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeKatex]}
           remarkPlugins={[remarkGfm, remarkMath, addHeaderIdPlugin]}
@@ -108,7 +113,7 @@ export default function Md({ content, className }: { content: string; className?
               </h4>
             ),
             p: ({ children }) => (
-              <p className="my-4 text-gray-800 dark:text-gray-100 text-[15px] font-sans leading-8">
+              <p className="my-4 text-gray-800 dark:text-gray-100 text-[15px] leading-[1.9]">
                 {children}
               </p>
             ),
@@ -147,7 +152,7 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="rounded-lg bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-700/60 p-0.5! my-6 overflow-x-auto text-sm">
+              <pre className="font-mono rounded-lg bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-700/60 p-0.5! my-6 overflow-x-auto text-sm">
                 {children}
               </pre>
             ),
