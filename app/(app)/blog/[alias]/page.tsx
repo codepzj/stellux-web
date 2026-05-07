@@ -34,7 +34,9 @@ export default async function BlogContent({ params }: Props) {
       <ScrollReset />
       <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
         <div className="w-full lg:w-4/5 px-4">
-          <div className="text-3xl font-bold font-mono py-4 mb-8">{post.title}</div>
+          <div className="text-3xl font-bold font-sans text-foreground tracking-tight text-balance py-4 mb-8">
+            {post.title}
+          </div>
           <Markdown className="wrap-break-word overflow-x-auto" content={post.content} />
         </div>
         {showToc && (

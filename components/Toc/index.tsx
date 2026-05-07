@@ -61,12 +61,13 @@ export function Toc({ content, className }: TocProps) {
         onClick={() => setCollapsed(!collapsed)}
         className="flex justify-between items-center mb-3 px-2 cursor-pointer select-none"
       >
-        <div className="flex min-w-0 flex-1 items-center gap-1.5 font-semibold tracking-wide text-muted-foreground dark:text-zinc-400 sticky top-0 right-0">
-          <List className="size-3.5 shrink-0 opacity-80" aria-hidden />
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-semibold tracking-wide text-muted-foreground dark:text-zinc-200 sticky top-0 right-0">
+          <List className="size-3.5 shrink-0 opacity-90 dark:opacity-100" aria-hidden />
           <span className="truncate">大纲</span>
         </div>
         <button
-          className="transition-transform duration-300 text-muted-foreground hover:text-foreground"
+          type="button"
+          className="transition-transform duration-300 text-muted-foreground hover:text-foreground dark:text-zinc-300 dark:hover:text-zinc-100"
           onClick={() => setCollapsed(!collapsed)}
         >
           <ChevronDown
@@ -128,7 +129,7 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
     <ul
       className={cn(
         'space-y-[2px] pl-2',
-        level === 1 && 'border-l border-zinc-200 dark:border-zinc-700'
+        level === 1 && 'border-l border-zinc-200 dark:border-zinc-500/80'
       )}
     >
       {tree.map((item, index) => {
@@ -143,8 +144,8 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               className={cn(
                 'block px-1.5 py-[3px] rounded-sm font-normal transition-all duration-200 transform-gpu',
                 'text-primary hover:bg-primary/10 hover:text-foreground hover:scale-[1.01]',
-                'dark:text-zinc-200',
-                isActive && 'bg-primary/10 font-semibold scale-[1.02] pl-3'
+                'dark:text-zinc-100 dark:hover:text-white',
+                isActive && 'bg-primary/10 font-semibold scale-[1.02] pl-3 dark:bg-primary/15'
               )}
               style={{ transformOrigin: 'left center' }}
             >
@@ -153,8 +154,8 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               )}
               <span
                 className={cn(
-                  level === 1 ? 'text-[13px]' : 'text-[12px]',
-                  isActive ? 'text-primary' : 'font-normal'
+                  level === 1 ? 'text-[13px] md:text-[14px]' : 'text-[13px]',
+                  isActive ? 'text-primary dark:text-zinc-50' : 'font-normal'
                 )}
               >
                 {item.title}

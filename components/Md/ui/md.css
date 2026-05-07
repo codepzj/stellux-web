@@ -68,8 +68,8 @@
   color-scheme: dark;
   background-color: transparent;
   --focus-outlineColor: #1f6feb;
-  --fgColor-default: #f0f6fc;
-  --fgColor-muted: #aab1bb; /* 稍微提升对比度 */
+  --fgColor-default: #f6f8fa;
+  --fgColor-muted: #c9d1d9; /* 次级文字再提亮，避免发灰发糊 */
   --fgColor-accent: #4493f8;
   --fgColor-success: #3fb950;
   --fgColor-attention: #d29922;
@@ -140,10 +140,50 @@
   text-rendering: optimizeLegibility;
 }
 
+/* 暗黑：避免 optimizeLegibility 在小字号下发虚 */
+.dark .markdown-body {
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 低 DPI：optimizeLegibility / geometricPrecision 易糊，用 auto + 关闭字距微调更稳 */
+@media (-webkit-max-device-pixel-ratio: 1.25), (max-resolution: 1.299dppx) {
+  .markdown-body {
+    text-rendering: auto;
+    font-feature-settings: normal;
+  }
+
+  .dark .markdown-body {
+    text-rendering: auto;
+    -webkit-font-smoothing: unset;
+  }
+
+  .markdown-body p {
+    letter-spacing: 0;
+  }
+
+  .dark .markdown-body p {
+    letter-spacing: 0;
+  }
+}
+
 /* 提升段落可读性与间距 */
 .markdown-body p {
   margin: 0.8em 0 1em;
   letter-spacing: 0.02em;
+}
+
+.dark .markdown-body p {
+  letter-spacing: 0.01em;
+}
+
+/*
+ * 标题：英文/数字用 Geist Mono → Menlo；中文等无字形回退到无衬线正文栈
+ *（浏览器按字符逐字选字体）
+ */
+.markdown-body :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-geist-mono), "Geist Mono", Menlo, Monaco, var(--font-sans), ui-sans-serif,
+    system-ui, sans-serif;
 }
 
 /* 标题在深色下更清晰 */
@@ -170,6 +210,27 @@
 
 .markdown-body pre code {
   font-family: inherit;
+}
+
+/* 技术文档里常见的 <kbd> 标签：暗黑下提高对比，避免灰字糊在黑底上 */
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.12em 0.45em;
+  font-size: 0.88em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  line-height: 1.45;
+  vertical-align: baseline;
+  border-radius: 6px;
+  font-weight: 500;
+  color: var(--fgColor-default);
+  background-color: var(--bgColor-muted);
+  border: 1px solid var(--borderColor-default);
+}
+
+.dark .markdown-body kbd {
+  color: #f6f8fa;
+  background-color: oklch(0.3 0 0);
+  border: 1px solid oklch(0.44 0 0);
 }
 
 /* 图片居中 */

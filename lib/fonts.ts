@@ -1,4 +1,4 @@
-import { JetBrains_Mono, Noto_Sans_SC, Noto_Serif_SC } from 'next/font/google'
+import { Geist_Mono, JetBrains_Mono, Noto_Sans_SC, Noto_Serif_SC } from 'next/font/google'
 
 /** 界面、导航、卡片与标签：无衬线，中文屏显清晰 */
 export const fontSans = Noto_Sans_SC({
@@ -24,4 +24,17 @@ export const fontMono = JetBrains_Mono({
   display: 'swap',
 })
 
-export const fontVariables = [fontSans.variable, fontSerif.variable, fontMono.variable].join(' ')
+/** Markdown 标题中的拉丁字母、数字；无字形时回退到中文无衬线 */
+export const fontGeistMono = Geist_Mono({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+})
+
+export const fontVariables = [
+  fontSans.variable,
+  fontSerif.variable,
+  fontMono.variable,
+  fontGeistMono.variable,
+].join(' ')

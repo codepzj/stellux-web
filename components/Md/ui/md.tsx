@@ -80,15 +80,17 @@ export default function Md({ content, className }: { content: string; className?
   return (
     <PhotoProvider>
       <article
-        className={cn(
-          'markdown-body overflow-y-hidden font-serif dark:font-bold text-pretty',
-          className
-        )}
+        className={cn('markdown-body overflow-y-hidden font-serif text-pretty', className)}
       >
         <ReactMarkdown
           rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeKatex]}
           remarkPlugins={[remarkGfm, remarkMath, addHeaderIdPlugin]}
           components={{
+            h1: ({ children }) => (
+              <h1 className="scroll-m-16 border-b border-gray-100 dark:border-gray-700 pb-3 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10">
+                {children}
+              </h1>
+            ),
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
@@ -111,6 +113,16 @@ export default function Md({ content, className }: { content: string; className?
               <h4 className="scroll-m-16 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-6">
                 {children}
               </h4>
+            ),
+            h5: ({ children }) => (
+              <h5 className="scroll-m-16 text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-5">
+                {children}
+              </h5>
+            ),
+            h6: ({ children }) => (
+              <h6 className="scroll-m-16 text-base font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-4">
+                {children}
+              </h6>
             ),
             p: ({ children }) => (
               <p className="my-4 text-gray-800 dark:text-gray-100 text-[15px] leading-[1.9]">
@@ -152,7 +164,7 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="font-mono rounded-lg bg-zinc-100/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-700/60 p-0.5! my-6 overflow-x-auto text-sm">
+              <pre className="font-mono rounded-lg bg-zinc-100/70 dark:bg-zinc-950 dark:text-zinc-100 border border-zinc-200/60 dark:border-zinc-600/80 p-0.5! my-6 overflow-x-auto text-sm">
                 {children}
               </pre>
             ),

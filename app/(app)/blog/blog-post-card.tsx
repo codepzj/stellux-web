@@ -22,7 +22,7 @@ export function BlogPostCard({ post }: { post: PostVO }) {
         <div className="flex items-stretch gap-4 min-h-[120px]">
           <div className="flex-1 min-w-0 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mt-1 mb-2 line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-400 transition-colors duration-200">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mt-1 mb-2 line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-200">
                 {post.title}
               </h3>
 

@@ -151,7 +151,7 @@ export default async function DocPage({ params }: DocPageProps) {
       <SidebarInset>
         <div className="w-full flex flex-col md:flex-row justify-center gap-2 mt-8">
           <div className="w-full lg:w-4/5 md:max-w-xl lg:max-w-3xl md:mr-4 mb-20 px-4 flex flex-col min-h-[calc(100vh-14rem)]">
-            <div className="text-3xl font-bold font-mono py-4 mb-8">
+            <div className="text-3xl font-bold font-sans text-foreground tracking-tight text-balance py-4 mb-8">
               {isRoot ? document?.title || '' : documentContent?.title || ''}
             </div>
             <div className="flex-1">

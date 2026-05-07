@@ -35,7 +35,7 @@ function DesktopNav() {
               className={`text-[14px] font-medium navbar-link ${
                 isActive
                   ? 'text-foreground nav-link-active'
-                  : 'text-gray-700 hover:text-foreground dark:text-gray-300'
+                  : 'text-gray-700 hover:text-foreground dark:text-zinc-200 dark:hover:text-white'
               }`}
             >
               {item.label}

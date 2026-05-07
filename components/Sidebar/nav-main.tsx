@@ -29,7 +29,7 @@ function itemMatchesPath(item: DocTreeItem, pathname: string): boolean {
 
 function TreeChevronCell({ children }: { children?: React.ReactNode }) {
   return (
-    <span className="flex h-4 w-[15px] shrink-0 items-center justify-center text-sidebar-foreground/55">
+    <span className="flex h-4 w-[15px] shrink-0 items-center justify-center text-sidebar-foreground/60 dark:text-sidebar-foreground/85">
       {children}
     </span>
   )
@@ -149,7 +149,7 @@ function RecursiveMenuItem({
       <SidebarMenuItem
         className={cn(
           'rounded-md transition-all duration-200',
-          depth > 0 && 'text-sidebar-foreground/90'
+          depth > 0 && 'text-sidebar-foreground/90 dark:text-sidebar-foreground'
         )}
       >
         <SidebarMenuButton asChild tooltip={item.title}>
@@ -183,7 +183,7 @@ function RecursiveMenuItem({
       <SidebarMenuItem
         className={cn(
           'rounded-md',
-          depth > 0 && 'text-sidebar-foreground/90'
+          depth > 0 && 'text-sidebar-foreground/90 dark:text-sidebar-foreground'
         )}
       >
         <CollapsibleTrigger asChild>

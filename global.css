@@ -77,7 +77,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* 略浅于纯黑，减轻细灰字发糊、发飘（仍保持暗黑观感） */
+  --background: oklch(0.165 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -88,7 +89,8 @@
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  /* 略提亮，避免 text-muted-foreground 在纯黑背景上发灰、难辨认 */
+  --muted-foreground: oklch(0.78 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -100,8 +102,8 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #000000;
-  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar: oklch(0.14 0 0);
+  --sidebar-foreground: oklch(0.97 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
@@ -135,6 +137,16 @@
   }
 }
 
+/* 低分屏：关闭 Tailwind antialiased 的灰度平滑，恢复系统默认（多为次像素），笔画更实 */
+@layer utilities {
+  @media (-webkit-max-device-pixel-ratio: 1.25), (max-resolution: 1.299dppx) {
+    .antialiased {
+      -webkit-font-smoothing: unset;
+      -moz-osx-font-smoothing: unset;
+    }
+  }
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
@@ -151,7 +163,7 @@
 }
 
 @utility faded-bottom {
-  @apply after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:hidden after:h-32 after:w-full after:bg-[linear-gradient(180deg,_transparent_10%,_var(--background)_70%)] md:after:block;
+  @apply after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:hidden after:h-32 after:w-full after:bg-[linear-gradient(180deg,transparent_10%,var(--background)_70%)] md:after:block;
 }
 
 /* styles.css */

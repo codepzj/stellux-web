@@ -42,7 +42,7 @@ export default function FriendCard({ friend }: Props) {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-400 line-clamp-2">
+            <CardTitle className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-200 line-clamp-2">
               {friend.name}
             </CardTitle>
             <CardDescription className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-2">
