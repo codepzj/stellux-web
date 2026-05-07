@@ -42,7 +42,7 @@ const Mermaid = ({ code }: { code: string }) => {
     }
   }, [code])
 
-  return <div ref={ref} className="my-4 grid grid-cols-1 place-items-center overflow-x-auto" />
+  return <div ref={ref} className="my-8 grid grid-cols-1 place-items-center overflow-x-auto" />
 }
 
 function addHeaderIds(ast: any) {
@@ -81,7 +81,7 @@ export default function Md({ content, className }: { content: string; className?
     <PhotoProvider>
       <article
         className={cn(
-          'markdown-body overflow-x-auto overflow-y-hidden font-sans text-pretty antialiased',
+          'markdown-body overflow-x-auto overflow-y-hidden pb-12 font-sans text-pretty antialiased md:pb-16 lg:pb-20',
           className
         )}
       >
@@ -90,14 +90,14 @@ export default function Md({ content, className }: { content: string; className?
           remarkPlugins={[remarkGfm, remarkMath, addHeaderIdPlugin]}
           components={{
             h1: ({ children }) => (
-              <h1 className="markdown-heading scroll-m-16 my-12 text-balance text-center text-4xl font-bold tracking-normal text-gray-900 first:mt-0 dark:text-gray-100">
+              <h1 className="markdown-heading scroll-m-16 text-balance text-center text-4xl font-bold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h1>
             ),
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-16 my-12 text-balance text-center text-3xl font-bold tracking-normal text-gray-900 first:mt-0 dark:text-gray-100"
+                className="markdown-heading scroll-m-16 text-balance text-center text-3xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
                 {...props}
               >
                 {children}
@@ -106,44 +106,44 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-16 my-10 text-balance text-center text-2xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
+                className="markdown-heading scroll-m-16 text-balance text-center text-2xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
                 {...props}
               >
                 {children}
               </h3>
             ),
             h4: ({ children }) => (
-              <h4 className="markdown-heading scroll-m-16 my-8 text-balance text-center text-xl font-semibold tracking-normal text-gray-900 dark:text-gray-100">
+              <h4 className="markdown-heading scroll-m-16 text-balance text-center text-xl font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h4>
             ),
             h5: ({ children }) => (
-              <h5 className="markdown-heading scroll-m-16 my-7 text-balance text-center text-lg font-semibold tracking-normal text-gray-900 dark:text-gray-100">
+              <h5 className="markdown-heading scroll-m-16 text-balance text-center text-lg font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h5>
             ),
             h6: ({ children }) => (
-              <h6 className="markdown-heading scroll-m-16 my-6 text-balance text-center text-base font-semibold tracking-normal text-gray-900 dark:text-gray-100">
+              <h6 className="markdown-heading scroll-m-16 text-balance text-center text-base font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h6>
             ),
             p: ({ children }) => (
-              <p className="my-6 text-[1.0625rem] leading-loose text-gray-800 dark:text-gray-100">
+              <p className="my-8 text-base leading-relaxed text-gray-800 dark:text-gray-100">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="mt-6 mb-6 list-disc space-y-2.5 pl-6 text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100">
+              <ul className="my-8 list-inside list-disc space-y-3 pl-0! text-base leading-[1.85] text-gray-800 dark:text-gray-100">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="mt-6 mb-6 list-decimal space-y-2.5 pl-6 text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100">
+              <ol className="my-8 list-inside list-decimal space-y-3 pl-0! text-base leading-[1.85] text-gray-800 dark:text-gray-100">
                 {children}
               </ol>
             ),
             li: ({ children }) => (
-              <li className="text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100 [&>p]:my-2">
+              <li className="text-base leading-[1.85] text-gray-800 dark:text-gray-100 [&>p]:my-2">
                 {children}
               </li>
             ),
@@ -152,7 +152,7 @@ export default function Md({ content, className }: { content: string; className?
                 <Image
                   width={1000}
                   height={1000}
-                  className="my-6 rounded-md"
+                  className="my-8 rounded-md"
                   src={src as string}
                   alt={alt as string}
                 />
@@ -167,7 +167,7 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="my-8 overflow-x-auto rounded-lg border border-zinc-200/60 bg-zinc-100/70 p-0.5! font-mono text-sm leading-relaxed dark:border-zinc-600/80 dark:bg-zinc-950 dark:text-zinc-100">
+              <pre className="my-10 overflow-x-auto rounded-lg border border-zinc-200/60 bg-zinc-100/70 p-0.5! font-mono text-sm leading-relaxed dark:border-zinc-600/80 dark:bg-zinc-950 dark:text-zinc-100">
                 {children}
               </pre>
             ),

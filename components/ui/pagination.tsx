@@ -8,7 +8,7 @@ function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
     <nav
       role="navigation"
-      aria-label="pagination"
+      aria-label="分页"
       data-slot="pagination"
       className={cn('mx-auto flex w-full justify-center', className)}
       {...props}
@@ -20,7 +20,10 @@ function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) 
   return (
     <ul
       data-slot="pagination-content"
-      className={cn('flex flex-row items-center gap-1', className)}
+      className={cn(
+        'flex flex-row flex-wrap items-center justify-center gap-1 sm:gap-1.5',
+        className
+      )}
       {...props}
     />
   )
@@ -46,6 +49,7 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
           variant: isActive ? 'outline' : 'ghost',
           size,
         }),
+        'rounded-lg shadow-none transition-colors',
         className
       )}
       {...props}
@@ -56,12 +60,12 @@ function PaginationLink({ className, isActive, size = 'icon', ...props }: Pagina
 function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label="上一页"
       className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
       {...props}
     >
       <ChevronLeftIcon />
-      <span className="hidden sm:block">Previous</span>
+      <span className="hidden sm:inline">上一页</span>
     </PaginationLink>
   )
 }
@@ -69,11 +73,11 @@ function PaginationPrevious({ className, ...props }: React.ComponentProps<typeof
 function PaginationNext({ className, ...props }: React.ComponentProps<typeof PaginationLink>) {
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label="下一页"
       className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
       {...props}
     >
-      <span className="hidden sm:block">Next</span>
+      <span className="hidden sm:inline">下一页</span>
       <ChevronRightIcon />
     </PaginationLink>
   )
@@ -84,11 +88,14 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'
     <span
       aria-hidden
       data-slot="pagination-ellipsis"
-      className={cn('flex size-9 items-center justify-center', className)}
+      className={cn(
+        'flex size-9 shrink-0 items-center justify-center text-muted-foreground',
+        className
+      )}
       {...props}
     >
-      <MoreHorizontalIcon className="size-4" />
-      <span className="sr-only">More pages</span>
+      <MoreHorizontalIcon className="size-4 opacity-70" />
+      <span className="sr-only">更多页码</span>
     </span>
   )
 }

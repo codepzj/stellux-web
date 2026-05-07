@@ -20,12 +20,29 @@ export function buildBlogListQuery(page: number, tag?: string, category?: string
   return params.toString()
 }
 
-export function getPaginationWindow(totalPage: number, currentPage: number): number[] {
-  const pages = Array.from({ length: totalPage }, (_, i) => i + 1)
-  return pages.slice(
-    Math.max(0, currentPage - 3),
-    Math.min(totalPage, currentPage + 2)
-  )
+/** 最多展示 `maxVisible` 个连续页码，尽量让当前页靠近中间 */
+export function getPaginationWindow(
+  totalPage: number,
+  currentPage: number,
+  maxVisible = 5
+): number[] {
+  if (totalPage <= 0) return []
+  const cap = Math.min(maxVisible, totalPage)
+  if (totalPage <= maxVisible) {
+    return Array.from({ length: totalPage }, (_, i) => i + 1)
+  }
+  const half = Math.floor(cap / 2)
+  let start = currentPage - half
+  let end = start + cap - 1
+  if (start < 1) {
+    start = 1
+    end = cap
+  }
+  if (end > totalPage) {
+    end = totalPage
+    start = totalPage - cap + 1
+  }
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 }
 
 /** 翻页时保留当前筛选：优先标签，其次分类 */

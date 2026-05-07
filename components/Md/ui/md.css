@@ -134,8 +134,8 @@
   margin: 0;
   color: var(--fgColor-default);
   background-color: transparent; /* 让全局背景透出 */
-  font-size: 1.0625rem; /* ~17px，略大于默认，减轻「挤」的感觉 */
-  line-height: 2; /* 正文呼吸感：与段落/列表组件搭配 */
+  font-size: 1rem; /* 16px：正文略收紧，减轻偏大感 */
+  line-height: 1.875; /* 与略小字号搭配，仍保持可读行距 */
   word-wrap: break-word;
   font-feature-settings: 'kern' 1;
   text-rendering: optimizeLegibility;
@@ -144,6 +144,17 @@
 /* 行长：正文与列表；标题单独由 .markdown-heading 约束并居中 */
 .markdown-body > :where(p, ul, ol, blockquote) {
   max-width: min(100%, 72ch);
+}
+
+/* 列表：覆盖 github-markdown 的左侧缩进，符号与序号顶格（list-inside） */
+.markdown-body :where(ul, ol) {
+  padding-left: 0;
+  margin-left: 0;
+  list-style-position: inside;
+}
+
+.markdown-body li > :where(ul, ol) {
+  margin-top: 0.35em;
 }
 
 /* 暗黑：避免 optimizeLegibility 在小字号下发虚 */
@@ -175,7 +186,7 @@
 
 /* 段落：与 md.tsx 的 margin 类叠加时以较大者为准；字距略松，中文更易扫读 */
 .markdown-body p {
-  margin: 1em 0 1.2em;
+  margin: 1.35em 0 1.55em;
   letter-spacing: 0.01em;
 }
 
@@ -184,11 +195,16 @@
 }
 
 .markdown-body blockquote {
-  margin-top: 1.25em;
-  margin-bottom: 1.4em;
+  margin-top: 1.55em;
+  margin-bottom: 1.75em;
   padding-top: 0.15em;
   padding-bottom: 0.15em;
   line-height: 1.95;
+}
+
+/* 关闭 github-markdown 默认给 h1/h2 加的底边框（含原始 HTML 标题） */
+.markdown-body :is(h1, h2, h3, h4, h5, h6) {
+  border-bottom: none;
 }
 
 /*
@@ -201,36 +217,42 @@
   font-family: var(--font-serif), ui-serif, Georgia, "Songti SC", "STSong", serif;
   font-feature-settings: 'kern' 1;
   text-wrap: balance;
-  padding-block: 0.75rem 1.25rem;
+  padding-block: 1rem 1.75rem;
   background-repeat: no-repeat;
   background-position: center 46%;
 }
 
 .markdown-body h1.markdown-heading {
+  margin-top: 4rem;
+  margin-bottom: 3.5rem;
   background-image: radial-gradient(
     ellipse 92% 72% at 50% 48%,
-    rgb(186 230 253 / 0.55),
-    rgb(224 242 254 / 0.22) 52%,
+    rgb(186 230 253 / 0.28),
+    rgb(224 242 254 / 0.1) 52%,
     transparent 72%
   );
   background-size: min(24rem, 120%) 6.25rem;
 }
 
 .markdown-body h2.markdown-heading {
+  margin-top: 3.75rem;
+  margin-bottom: 3.25rem;
   background-image: radial-gradient(
     ellipse 88% 68% at 50% 48%,
-    rgb(186 230 253 / 0.48),
-    rgb(224 242 254 / 0.18) 50%,
+    rgb(186 230 253 / 0.22),
+    rgb(224 242 254 / 0.08) 50%,
     transparent 70%
   );
   background-size: min(21rem, 118%) 5.5rem;
 }
 
 .markdown-body h3.markdown-heading {
+  margin-top: 3.25rem;
+  margin-bottom: 2.75rem;
   background-image: radial-gradient(
     ellipse 82% 64% at 50% 48%,
-    rgb(186 230 253 / 0.4),
-    rgb(224 242 254 / 0.14) 52%,
+    rgb(186 230 253 / 0.18),
+    rgb(224 242 254 / 0.06) 52%,
     transparent 68%
   );
   background-size: min(18rem, 112%) 4.75rem;
@@ -239,20 +261,37 @@
 .markdown-body h4.markdown-heading,
 .markdown-body h5.markdown-heading,
 .markdown-body h6.markdown-heading {
+  margin-top: 2.875rem;
+  margin-bottom: 2.375rem;
   background-image: radial-gradient(
     ellipse 78% 58% at 50% 50%,
-    rgb(186 230 253 / 0.34),
-    rgb(224 242 254 / 0.1) 48%,
+    rgb(186 230 253 / 0.14),
+    rgb(224 242 254 / 0.045) 48%,
     transparent 66%
   );
   background-size: min(15rem, 108%) 4rem;
 }
 
+.markdown-body h5.markdown-heading {
+  margin-top: 2.625rem;
+  margin-bottom: 2.125rem;
+}
+
+.markdown-body h6.markdown-heading {
+  margin-top: 2.375rem;
+  margin-bottom: 1.875rem;
+}
+
+.markdown-body h1.markdown-heading:first-child,
+.markdown-body h2.markdown-heading:first-child {
+  margin-top: 0;
+}
+
 .dark .markdown-body h1.markdown-heading {
   background-image: radial-gradient(
     ellipse 92% 72% at 50% 48%,
-    rgb(59 130 246 / 0.32),
-    rgb(37 99 235 / 0.1) 52%,
+    rgb(59 130 246 / 0.16),
+    rgb(37 99 235 / 0.05) 52%,
     transparent 72%
   );
 }
@@ -260,8 +299,8 @@
 .dark .markdown-body h2.markdown-heading {
   background-image: radial-gradient(
     ellipse 88% 68% at 50% 48%,
-    rgb(59 130 246 / 0.26),
-    rgb(37 99 235 / 0.08) 50%,
+    rgb(59 130 246 / 0.13),
+    rgb(37 99 235 / 0.04) 50%,
     transparent 70%
   );
 }
@@ -269,8 +308,8 @@
 .dark .markdown-body h3.markdown-heading {
   background-image: radial-gradient(
     ellipse 82% 64% at 50% 48%,
-    rgb(59 130 246 / 0.22),
-    rgb(37 99 235 / 0.06) 52%,
+    rgb(59 130 246 / 0.11),
+    rgb(37 99 235 / 0.03) 52%,
     transparent 68%
   );
 }
@@ -280,7 +319,7 @@
 .dark .markdown-body h6.markdown-heading {
   background-image: radial-gradient(
     ellipse 78% 58% at 50% 50%,
-    rgb(59 130 246 / 0.18),
+    rgb(59 130 246 / 0.09),
     transparent 66%
   );
 }
@@ -300,10 +339,10 @@
   color: #9ec1ff;
 }
 
-/* 代码字号稍大一点，便于阅读；等宽与正文衬线区分 */
+/* 代码字号略小于正文；等宽与正文区分 */
 .markdown-body code,
 .markdown-body pre {
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   font-family: var(--font-mono), ui-monospace, monospace;
 }
 
