@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import NextLink from 'next/link'
+import { cn, contentListCardClassName } from '@/lib/utils'
 
 export default function DocumentPage() {
   const [docList, setDocList] = useState<DocumentVO[]>([])
@@ -59,7 +60,7 @@ export default function DocumentPage() {
                   ? Array.from({ length: skeletonCount }).map((_, idx) => (
                       <Card
                         key={idx}
-                        className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
+                        className={cn('border-0 shadow-none', contentListCardClassName)}
                       >
                         <div className="flex items-stretch gap-4 min-h-[120px]">
                           {/* 左侧内容骨架屏 */}
@@ -80,9 +81,12 @@ export default function DocumentPage() {
                           {/* 右侧图片骨架屏 */}
                           <div className="flex flex-col items-end justify-between">
                             {/* 右侧图片骨架屏 */}
-                            <div className="hidden md:block w-48 h-27 mb-3">
-                              <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-md">
-                                <Skeleton className="w-full h-full rounded-md" />
+                            <div className="hidden md:block w-48 h-27 mb-3 shrink-0">
+                              <AspectRatio
+                                ratio={16 / 9}
+                                className="overflow-hidden rounded-lg bg-muted/30 ring-1 ring-inset ring-black/6 dark:ring-white/10"
+                              >
+                                <Skeleton className="h-full w-full rounded-lg" />
                               </AspectRatio>
                             </div>
                           </div>
@@ -90,20 +94,24 @@ export default function DocumentPage() {
                       </Card>
                     ))
                   : docList.map((item) => (
-                      <NextLink key={item.id} href={`/document/${item.alias}`} className="block">
-                        <Card className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg transition-colors duration-200">
+                      <NextLink
+                        key={item.id}
+                        href={`/document/${item.alias}`}
+                        className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      >
+                        <Card className={cn('border-0 shadow-none', contentListCardClassName)}>
                           <CardContent className="p-0">
                             <div className="flex items-stretch gap-4 min-h-[120px]">
                               {/* 内容区域 */}
                               <div className="flex-1 min-w-0 flex flex-col justify-between">
                                 <div>
                                   {/* 文章标题 */}
-                                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mt-1 mb-2 line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-200">
+                                  <h3 className="text-lg font-medium tracking-tight text-gray-900 dark:text-gray-100 mt-1 mb-2 line-clamp-2 transition-colors duration-200 group-hover:text-primary">
                                     {item.title}
                                   </h3>
 
                                   {/* 文章摘要 */}
-                                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 mb-3">
+                                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mb-3">
                                     {item.description}
                                   </p>
                                 </div>
@@ -125,21 +133,21 @@ export default function DocumentPage() {
                               {/* 右侧区域 - 图片和时间 */}
                               <div className="flex flex-col items-end justify-between">
                                 {/* 右侧图片 - 固定16:9比例 */}
-                                <div className="hidden md:block w-48 h-27 mb-3">
+                                <div className="hidden md:block w-48 h-27 mb-3 shrink-0">
                                   <AspectRatio
                                     ratio={16 / 9}
-                                    className="overflow-hidden rounded-md"
+                                    className="overflow-hidden rounded-lg bg-muted/40 ring-1 ring-inset ring-black/6 dark:ring-white/10"
                                   >
                                     {item.thumbnail ? (
                                       <img
                                         src={item.thumbnail}
                                         alt={item.title}
-                                        className="w-full h-full object-cover"
+                                        className="h-full w-full object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.03]"
                                         loading="lazy"
                                       />
                                     ) : (
-                                      <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                                        <WikiIcon className="w-8 h-8 text-gray-400 dark:text-gray-600" />
+                                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-muted/90 to-muted">
+                                        <WikiIcon className="h-8 w-8 text-muted-foreground/70" />
                                       </div>
                                     )}
                                   </AspectRatio>

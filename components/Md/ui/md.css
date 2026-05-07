@@ -134,10 +134,16 @@
   margin: 0;
   color: var(--fgColor-default);
   background-color: transparent; /* 让全局背景透出 */
-  line-height: 1.85; /* 再提升行高，增强可读性 */
+  font-size: 1.0625rem; /* ~17px，略大于默认，减轻「挤」的感觉 */
+  line-height: 2; /* 正文呼吸感：与段落/列表组件搭配 */
   word-wrap: break-word;
   font-feature-settings: 'kern' 1;
   text-rendering: optimizeLegibility;
+}
+
+/* 行长：正文与列表；标题单独由 .markdown-heading 约束并居中 */
+.markdown-body > :where(p, ul, ol, blockquote) {
+  max-width: min(100%, 72ch);
 }
 
 /* 暗黑：避免 optimizeLegibility 在小字号下发虚 */
@@ -167,23 +173,116 @@
   }
 }
 
-/* 提升段落可读性与间距 */
+/* 段落：与 md.tsx 的 margin 类叠加时以较大者为准；字距略松，中文更易扫读 */
 .markdown-body p {
-  margin: 0.8em 0 1em;
-  letter-spacing: 0.02em;
-}
-
-.dark .markdown-body p {
+  margin: 1em 0 1.2em;
   letter-spacing: 0.01em;
 }
 
+.dark .markdown-body p {
+  letter-spacing: 0.005em;
+}
+
+.markdown-body blockquote {
+  margin-top: 1.25em;
+  margin-bottom: 1.4em;
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
+  line-height: 1.95;
+}
+
 /*
- * 标题：英文/数字用 Geist Mono → Menlo；中文等无字形回退到无衬线正文栈
- *（浏览器按字符逐字选字体）
+ * 标题：衬线 + 居中 + 浅色光晕（杂志感阅读）；拉丁仍随 Noto Serif 字形走
  */
-.markdown-body :where(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-geist-mono), "Geist Mono", Menlo, Monaco, var(--font-sans), ui-sans-serif,
-    system-ui, sans-serif;
+.markdown-body :is(h1, h2, h3, h4, h5, h6).markdown-heading {
+  margin-inline: auto;
+  max-width: min(100%, 72ch);
+  text-align: center;
+  font-family: var(--font-serif), ui-serif, Georgia, "Songti SC", "STSong", serif;
+  font-feature-settings: 'kern' 1;
+  text-wrap: balance;
+  padding-block: 0.75rem 1.25rem;
+  background-repeat: no-repeat;
+  background-position: center 46%;
+}
+
+.markdown-body h1.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 92% 72% at 50% 48%,
+    rgb(186 230 253 / 0.55),
+    rgb(224 242 254 / 0.22) 52%,
+    transparent 72%
+  );
+  background-size: min(24rem, 120%) 6.25rem;
+}
+
+.markdown-body h2.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 88% 68% at 50% 48%,
+    rgb(186 230 253 / 0.48),
+    rgb(224 242 254 / 0.18) 50%,
+    transparent 70%
+  );
+  background-size: min(21rem, 118%) 5.5rem;
+}
+
+.markdown-body h3.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 82% 64% at 50% 48%,
+    rgb(186 230 253 / 0.4),
+    rgb(224 242 254 / 0.14) 52%,
+    transparent 68%
+  );
+  background-size: min(18rem, 112%) 4.75rem;
+}
+
+.markdown-body h4.markdown-heading,
+.markdown-body h5.markdown-heading,
+.markdown-body h6.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 78% 58% at 50% 50%,
+    rgb(186 230 253 / 0.34),
+    rgb(224 242 254 / 0.1) 48%,
+    transparent 66%
+  );
+  background-size: min(15rem, 108%) 4rem;
+}
+
+.dark .markdown-body h1.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 92% 72% at 50% 48%,
+    rgb(59 130 246 / 0.32),
+    rgb(37 99 235 / 0.1) 52%,
+    transparent 72%
+  );
+}
+
+.dark .markdown-body h2.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 88% 68% at 50% 48%,
+    rgb(59 130 246 / 0.26),
+    rgb(37 99 235 / 0.08) 50%,
+    transparent 70%
+  );
+}
+
+.dark .markdown-body h3.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 82% 64% at 50% 48%,
+    rgb(59 130 246 / 0.22),
+    rgb(37 99 235 / 0.06) 52%,
+    transparent 68%
+  );
+}
+
+.dark .markdown-body h4.markdown-heading,
+.dark .markdown-body h5.markdown-heading,
+.dark .markdown-body h6.markdown-heading {
+  background-image: radial-gradient(
+    ellipse 78% 58% at 50% 50%,
+    rgb(59 130 246 / 0.18),
+    transparent 66%
+  );
 }
 
 /* 标题在深色下更清晰 */
@@ -246,4 +345,17 @@
     margin: 0;
     padding: 0;
   }
+}
+
+/*
+ * GFM 默认 table 为 display:block + width:max-content，短文本时表格只占内容宽度。
+ * 改为至少占满正文一行；列仍按内容分配，多余宽度由 auto 表格布局消化；超宽时由外层 overflow-x 滚动。
+ */
+.markdown-body table {
+  display: table;
+  width: auto;
+  min-width: 100%;
+  max-width: none;
+  overflow: visible;
+  table-layout: auto;
 }

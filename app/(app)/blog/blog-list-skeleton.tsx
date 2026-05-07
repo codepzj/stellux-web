@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui/card'
+import { cn, contentListCardClassName } from '@/lib/utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Skeleton } from '@/components/ui/skeleton'
 import { BLOG_PAGE_SIZE } from '@/lib/blog-list'
@@ -9,7 +10,7 @@ export function BlogListSkeleton({ count = BLOG_PAGE_SIZE }: { count?: number })
       {Array.from({ length: count }, (_, idx) => (
         <Card
           key={idx}
-          className="border-0 shadow-none bg-white/90 dark:bg-card/80 p-4 hover:bg-gray-50 dark:hover:bg-card/90 cursor-pointer group rounded-lg relative transition-colors duration-200"
+          className={cn('border-0 shadow-none', contentListCardClassName)}
         >
           <div className="flex items-stretch gap-4 min-h-[120px]">
             <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -26,8 +27,11 @@ export function BlogListSkeleton({ count = BLOG_PAGE_SIZE }: { count?: number })
             </div>
             <div className="flex flex-col items-end justify-between">
               <div className="hidden md:block w-48 h-27 mb-3">
-                <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-md">
-                  <Skeleton className="w-full h-full rounded-md" />
+                <AspectRatio
+                  ratio={16 / 9}
+                  className="overflow-hidden rounded-lg bg-muted/30 ring-1 ring-inset ring-black/6 dark:ring-white/10"
+                >
+                  <Skeleton className="h-full w-full rounded-lg" />
                 </AspectRatio>
               </div>
               <div>

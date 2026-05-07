@@ -47,7 +47,7 @@ export function BlogListSection({
                     {pagination.total_count} 篇
                   </span>
                 </div>
-                <Search className="md:w-36" />
+                <Search className="w-full max-w-full md:max-w-[min(100%,18rem)]" />
               </div>
 
               {(tagName || categoryName) && (

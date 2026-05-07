@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { Calendar, Clock, BookOpen } from 'lucide-react'
+import { Clock, Leaf, Pencil, Pilcrow } from 'lucide-react'
 
 /**
  * 博客/文档等 MD 页面的统一骨架屏
@@ -10,28 +10,37 @@ import { Calendar, Clock, BookOpen } from 'lucide-react'
 export function MdPageSkeleton({ contentClassName }: { contentClassName?: string }) {
   return (
     <div>
-      {/* 标题 - 与 text-3xl font-bold py-4 mb-4 对应，增加上下间距 */}
-      <div className="py-4 mb-4">
-        <Skeleton className="h-9 w-4/5 max-w-2xl rounded-md" />
+      {/* 与博客文章页 PostArticleHeader 一致的圆角信息区 */}
+      <div className="mb-10 rounded-2xl border border-zinc-200/70 bg-zinc-100 px-5 py-5 dark:border-border/80 dark:bg-muted/45 md:px-6 md:py-6">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-5">
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Pencil className="size-3.5 shrink-0 opacity-80" />
+            <Skeleton className="h-3.5 w-14 rounded" />
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Clock className="size-3.5 shrink-0 opacity-80" />
+            <Skeleton className="h-3.5 w-14 rounded" />
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Leaf className="size-3.5 shrink-0 opacity-80" />
+            <Skeleton className="h-3.5 w-10 rounded" />
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Pilcrow className="size-3.5 shrink-0 opacity-80" />
+            <Skeleton className="h-3.5 w-16 rounded" />
+          </div>
+        </div>
+        <Skeleton className="mt-5 h-8 w-[min(100%,28rem)] rounded-md md:h-9" />
       </div>
-
-      {/* 元信息 - 与文章页/文档页一致 */}
-      <div className="flex items-center gap-3 text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-8 px-2">
-        <div className="flex items-center gap-1">
-          <Calendar className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
-          <Skeleton className="h-4 w-28" />
-        </div>
-        <div className="flex items-center gap-1">
-          <Clock className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
-          <Skeleton className="h-4 w-28" />
-        </div>
-        <div className="flex items-center gap-1">
-          <BookOpen className="h-3 w-3 md:h-4 md:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
-          <Skeleton className="h-4 w-24" />
+      <div className="mb-10 flex gap-2.5">
+        <span className="mt-0.5 text-primary/40" aria-hidden>
+          ✧
+        </span>
+        <div className="min-w-0 flex-1 space-y-2">
+          <Skeleton className="h-4 w-full max-w-2xl rounded" />
+          <Skeleton className="h-4 w-4/5 max-w-xl rounded" />
         </div>
       </div>
-
-      <div className="h-4" />
 
       {/* Markdown 内容区 - 与 markdown-body 一致，段落间距稍大以匹配实际呈现 */}
       <article className={cn('markdown-body text-base', contentClassName)}>

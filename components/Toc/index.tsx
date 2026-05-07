@@ -56,13 +56,13 @@ export function Toc({ content, className }: TocProps) {
   if (!toc?.length) return null
 
   return (
-    <nav className={cn('text-sm transition-all duration-300 z-50', className)}>
+    <nav className={cn('text-xs transition-all duration-300 z-50', className)}>
       <div
         onClick={() => setCollapsed(!collapsed)}
         className="flex justify-between items-center mb-3 px-2 cursor-pointer select-none"
       >
-        <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-semibold tracking-wide text-muted-foreground dark:text-zinc-200 sticky top-0 right-0">
-          <List className="size-3.5 shrink-0 opacity-90 dark:opacity-100" aria-hidden />
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground dark:text-zinc-200 sticky top-0 right-0">
+          <List className="size-3 shrink-0 opacity-90 dark:opacity-100" aria-hidden />
           <span className="truncate">大纲</span>
         </div>
         <button
@@ -150,11 +150,11 @@ function Tree({ tree, level = 1, activeItem }: TreeProps) {
               style={{ transformOrigin: 'left center' }}
             >
               {isActive && (
-                <span className="absolute left-1 top-1/2 -translate-y-1/2 w-[4px] h-[14px] bg-primary rounded-full shadow-sm" />
+                <span className="absolute left-1 top-1/2 h-3 w-1 -translate-y-1/2 rounded-full bg-primary shadow-sm" />
               )}
               <span
                 className={cn(
-                  level === 1 ? 'text-[13px] md:text-[14px]' : 'text-[13px]',
+                  level === 1 ? 'text-[12px] md:text-[13px]' : 'text-[12px]',
                   isActive ? 'text-primary dark:text-zinc-50' : 'font-normal'
                 )}
               >

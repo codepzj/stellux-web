@@ -56,7 +56,7 @@ export const Provider = ({ children }: { children: React.ReactNode }) => {
         setResults([])
         setHasSearched(false)
       }
-    }, 800)
+    }, 450)
 
     return () => clearTimeout(debounceTimer)
   }, [keyword, searchPosts])

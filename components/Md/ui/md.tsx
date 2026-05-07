@@ -80,21 +80,24 @@ export default function Md({ content, className }: { content: string; className?
   return (
     <PhotoProvider>
       <article
-        className={cn('markdown-body overflow-y-hidden font-serif text-pretty', className)}
+        className={cn(
+          'markdown-body overflow-x-auto overflow-y-hidden font-sans text-pretty antialiased',
+          className
+        )}
       >
         <ReactMarkdown
           rehypePlugins={[rehypeRaw, rehypeHighlight, rehypeKatex]}
           remarkPlugins={[remarkGfm, remarkMath, addHeaderIdPlugin]}
           components={{
             h1: ({ children }) => (
-              <h1 className="scroll-m-16 border-b border-gray-100 dark:border-gray-700 pb-3 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10">
+              <h1 className="markdown-heading scroll-m-16 my-12 text-balance text-center text-4xl font-bold tracking-normal text-gray-900 first:mt-0 dark:text-gray-100">
                 {children}
               </h1>
             ),
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="scroll-m-16 border-b border-gray-100 dark:border-gray-700 pb-3 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 first:mt-0 my-10"
+                className="markdown-heading scroll-m-16 my-12 text-balance text-center text-3xl font-bold tracking-normal text-gray-900 first:mt-0 dark:text-gray-100"
                 {...props}
               >
                 {children}
@@ -103,44 +106,44 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="scroll-m-16 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100 my-8"
+                className="markdown-heading scroll-m-16 my-10 text-balance text-center text-2xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
                 {...props}
               >
                 {children}
               </h3>
             ),
             h4: ({ children }) => (
-              <h4 className="scroll-m-16 text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-6">
+              <h4 className="markdown-heading scroll-m-16 my-8 text-balance text-center text-xl font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h4>
             ),
             h5: ({ children }) => (
-              <h5 className="scroll-m-16 text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-5">
+              <h5 className="markdown-heading scroll-m-16 my-7 text-balance text-center text-lg font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h5>
             ),
             h6: ({ children }) => (
-              <h6 className="scroll-m-16 text-base font-semibold tracking-tight text-gray-900 dark:text-gray-100 my-4">
+              <h6 className="markdown-heading scroll-m-16 my-6 text-balance text-center text-base font-semibold tracking-normal text-gray-900 dark:text-gray-100">
                 {children}
               </h6>
             ),
             p: ({ children }) => (
-              <p className="my-4 text-gray-800 dark:text-gray-100 text-[15px] leading-[1.9]">
+              <p className="my-6 text-[1.0625rem] leading-loose text-gray-800 dark:text-gray-100">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="pl-5! mt-4 list-disc space-y-1 text-[15px] text-gray-800 dark:text-gray-100">
+              <ul className="mt-6 mb-6 list-disc space-y-2.5 pl-6 text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="pl-5! mt-4 list-decimal space-y-1 text-[15px] text-gray-800 dark:text-gray-100">
+              <ol className="mt-6 mb-6 list-decimal space-y-2.5 pl-6 text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100">
                 {children}
               </ol>
             ),
             li: ({ children }) => (
-              <li className="my-2 text-[15px] text-gray-800 dark:text-gray-100">
+              <li className="text-[1.0625rem] leading-[1.95] text-gray-800 dark:text-gray-100 [&>p]:my-2">
                 {children}
               </li>
             ),
@@ -164,7 +167,7 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="font-mono rounded-lg bg-zinc-100/70 dark:bg-zinc-950 dark:text-zinc-100 border border-zinc-200/60 dark:border-zinc-600/80 p-0.5! my-6 overflow-x-auto text-sm">
+              <pre className="my-8 overflow-x-auto rounded-lg border border-zinc-200/60 bg-zinc-100/70 p-0.5! font-mono text-sm leading-relaxed dark:border-zinc-600/80 dark:bg-zinc-950 dark:text-zinc-100">
                 {children}
               </pre>
             ),
