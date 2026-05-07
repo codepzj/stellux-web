@@ -66,7 +66,7 @@ export function ArticleDescriptionTypewriter({ text, className }: Props) {
         strokeWidth={1.75}
       />
       <span className="sr-only">{full}</span>
-      <span className="min-h-[1.5rem] text-muted-foreground md:min-h-[1.625rem]" aria-hidden>
+      <span className="min-h-6 text-muted-foreground md:min-h-6.5" aria-hidden>
         {shown}
         {!complete && (
           <span

@@ -19,7 +19,7 @@ export default function BlogListLoading() {
                       …
                     </span>
                   </div>
-                  <Search className="w-full max-w-full md:max-w-[min(100%,18rem)]" />
+                  <Search className="md:w-52" />
                 </div>
                 <div className="flex flex-col gap-4 min-h-[600px]">
                   <BlogListSkeleton />

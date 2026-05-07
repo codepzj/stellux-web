@@ -16,8 +16,8 @@ WORKDIR /app
 RUN corepack enable
 RUN corepack prepare pnpm@latest --activate
 
-# 拷贝依赖相关文件
-COPY package.json .npmrc* ./
+# pnpm-workspace.yaml
+COPY package.json pnpm-workspace.yaml .npmrc* ./
 
 # 安装依赖
 RUN pnpm install

@@ -72,7 +72,7 @@ export function SearchModal() {
         <CommandList
           className={cn(
             'max-h-[min(52vh,420px)] scroll-py-2',
-            !loading && !keyword.trim() && 'min-h-56'
+            (loading || !keyword.trim()) && 'min-h-56'
           )}
         >
           {!loading && results.length > 0 && (

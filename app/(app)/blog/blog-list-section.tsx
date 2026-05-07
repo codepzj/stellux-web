@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { Tag, Book, FolderOpen } from 'lucide-react'
 import { Search } from './search'
+import { buttonVariants } from '@/components/ui/button'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+} from '@/components/ui/pagination'
 import { cn } from '@/lib/utils'
 import type { PostVO } from '@/types/post'
 import type { BlogListPagination } from '@/lib/blog-list'
@@ -41,7 +47,7 @@ export function BlogListSection({
                     {pagination.total_count} 篇
                   </span>
                 </div>
-                <Search className="w-full max-w-full md:max-w-[min(100%,18rem)]" />
+                <Search className="md:w-52" />
               </div>
 
               {(tagName || categoryName) && (
@@ -68,69 +74,39 @@ export function BlogListSection({
                 </div>
               )}
               <div className="flex flex-col gap-4 min-h-[600px]">
-                {posts.map((post) => (
-                  <BlogPostCard key={post.id} post={post} />
+                {posts.map((post, index) => (
+                  <BlogPostCard
+                    key={post.id}
+                    post={post}
+                    thumbnailPriority={index === 0}
+                  />
                 ))}
               </div>
+              <div className="h-8" />
               {pagination.total_page > 1 && (
-                <nav
-                  className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 pt-8 text-sm sm:justify-end"
-                  aria-label="分页"
-                >
-                  {pagination.page_no > 1 ? (
-                    <Link
-                      href={`/blog?${buildBlogListQuery(pagination.page_no - 1, navTag, navCategory)}`}
-                      scroll
-                      className="rounded-sm px-2 py-1 text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
-                      上一页
-                    </Link>
-                  ) : (
-                    <span className="cursor-default px-2 py-1 text-muted-foreground/45">上一页</span>
-                  )}
-                  <span className="select-none px-1.5 text-muted-foreground/45" aria-hidden>
-                    ·
-                  </span>
-                  {pageItems.map((page, idx) => (
-                    <span key={page} className="inline-flex items-center">
-                      {idx > 0 ? (
-                        <span className="select-none px-1 text-muted-foreground/45" aria-hidden>
-                          ·
-                        </span>
-                      ) : null}
-                      {page === pagination.page_no ? (
-                        <span
-                          className="min-w-6 px-1 py-1 text-center tabular-nums font-medium text-foreground"
-                          aria-current="page"
-                        >
-                          {page}
-                        </span>
-                      ) : (
-                        <Link
-                          href={`/blog?${buildBlogListQuery(page, navTag, navCategory)}`}
-                          scroll
-                          className="min-w-6 px-1 py-1 text-center tabular-nums text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        >
-                          {page}
-                        </Link>
-                      )}
-                    </span>
-                  ))}
-                  <span className="select-none px-1.5 text-muted-foreground/45" aria-hidden>
-                    ·
-                  </span>
-                  {pagination.page_no < pagination.total_page ? (
-                    <Link
-                      href={`/blog?${buildBlogListQuery(pagination.page_no + 1, navTag, navCategory)}`}
-                      scroll
-                      className="rounded-sm px-2 py-1 text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    >
-                      下一页
-                    </Link>
-                  ) : (
-                    <span className="cursor-default px-2 py-1 text-muted-foreground/45">下一页</span>
-                  )}
-                </nav>
+                <div className="flex justify-end">
+                  <Pagination className="justify-end">
+                    <PaginationContent>
+                      {pageItems.map((page) => (
+                        <PaginationItem key={page}>
+                          <Link
+                            href={`/blog?${buildBlogListQuery(page, navTag, navCategory)}`}
+                            scroll
+                            className={cn(
+                              buttonVariants({
+                                variant: page === pagination.page_no ? 'outline' : 'ghost',
+                                size: 'icon',
+                              })
+                            )}
+                            aria-current={page === pagination.page_no ? 'page' : undefined}
+                          >
+                            {page}
+                          </Link>
+                        </PaginationItem>
+                      ))}
+                    </PaginationContent>
+                  </Pagination>
+                </div>
               )}
             </section>
           </div>

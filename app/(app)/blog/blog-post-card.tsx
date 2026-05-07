@@ -11,7 +11,13 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { buildBlogListQuery } from '@/lib/blog-list'
 import { contentListCardClassName, cn } from '@/lib/utils'
 
-export function BlogPostCard({ post }: { post: PostVO }) {
+export function BlogPostCard({
+  post,
+  thumbnailPriority = false,
+}: {
+  post: PostVO
+  thumbnailPriority?: boolean
+}) {
   const router = useRouter()
 
   return (
@@ -78,7 +84,9 @@ export function BlogPostCard({ post }: { post: PostVO }) {
                     fill
                     sizes="192px"
                     className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.03]"
-                    loading="lazy"
+                    {...(thumbnailPriority
+                      ? { priority: true }
+                      : { loading: 'lazy' as const })}
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-muted/90 to-muted">
