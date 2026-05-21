@@ -39,3 +39,6 @@ tmp/
 
 # lock 
 *.lock
+
+# .env files
+.env.production
