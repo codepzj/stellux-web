@@ -1,8 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { Calendar, Tag, Book, FolderOpen } from 'lucide-react'
+import Link from 'next/link'
+import { Calendar, Tag, BookOpen, FolderOpen, Pin } from 'lucide-react'
 import { formatRelativeTime } from '@/utils/date'
 import type { PostVO } from '@/types/post'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,94 +18,107 @@ export function BlogPostCard({
   post: PostVO
   thumbnailPriority?: boolean
 }) {
-  const router = useRouter()
-
   return (
     <Card
-      className={cn('border-0 shadow-none', contentListCardClassName)}
-      onClick={() => router.push(`/blog/${post.alias}`)}
+      className={cn(
+        'border-0 shadow-none max-sm:p-3.5',
+        contentListCardClassName
+      )}
     >
-      <CardContent className="p-0">
-        <div className="flex items-stretch gap-4 min-h-[120px]">
-          <div className="flex-1 min-w-0 flex flex-col justify-between">
-            <div>
-              <h3 className="text-lg font-medium tracking-tight text-gray-900 dark:text-gray-100 mt-1 mb-2 line-clamp-2 transition-colors duration-200 group-hover:text-primary">
+      <Link
+        href={`/blog/${post.alias}`}
+        scroll
+        className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        aria-label={`阅读：${post.title}`}
+      />
+      <CardContent className="relative z-10 p-0 pointer-events-none">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-5">
+          <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5 sm:gap-3">
+            <div className="min-w-0">
+              {post.is_top ? (
+                <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="border-primary/20 bg-primary/8 text-primary dark:bg-primary/15"
+                  >
+                    <Pin className="size-3" aria-hidden />
+                    置顶
+                  </Badge>
+                </div>
+              ) : null}
+              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:text-lg md:text-xl">
                 {post.title}
-              </h3>
-
-              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mb-3">
-                {post.description}
-              </p>
+              </h2>
+              {post.description ? (
+                <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:mt-2 sm:line-clamp-2 md:line-clamp-1">
+                  {post.description}
+                </p>
+              ) : null}
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              {post.category && (
-                <Badge
-                  variant="secondary"
-                  labelRole="category"
-                  className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    router.push(`/blog?${buildBlogListQuery(1, undefined, post.category)}`)
-                  }}
+            <div className="pointer-events-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {post.category ? (
+                <Link
+                  href={`/blog?${buildBlogListQuery(1, undefined, post.category)}`}
+                  scroll
+                  className="max-w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <FolderOpen className="h-3 w-3 mr-1" />
-                  {post.category}
-                </Badge>
-              )}
+                  <Badge
+                    variant="secondary"
+                    labelRole="category"
+                    className="max-w-full cursor-pointer [&>span]:truncate"
+                  >
+                    <FolderOpen className="size-3 shrink-0" aria-hidden />
+                    <span className="truncate">{post.category}</span>
+                  </Badge>
+                </Link>
+              ) : null}
               {post.tags?.slice(0, 2).map((tag, i) => (
-                <Badge
+                <Link
                   key={i}
-                  variant="outline"
-                  labelRole="tag"
-                  className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    router.push(`/blog?${buildBlogListQuery(1, tag, undefined)}`)
-                  }}
+                  href={`/blog?${buildBlogListQuery(1, tag, undefined)}`}
+                  scroll
+                  className="max-w-[min(100%,12rem)] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <Tag className="h-3 w-3 mr-1" />
-                  {tag}
-                </Badge>
+                  <Badge
+                    variant="outline"
+                    labelRole="tag"
+                    className="max-w-full cursor-pointer [&>span]:truncate"
+                  >
+                    <Tag className="size-3 shrink-0" aria-hidden />
+                    <span className="truncate">{tag}</span>
+                  </Badge>
+                </Link>
               ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col items-end justify-between">
-            <div className="hidden md:block w-48 mb-3 relative shrink-0">
-              <AspectRatio
-                ratio={16 / 9}
-                className="relative overflow-hidden rounded-lg bg-muted/40 ring-1 ring-inset ring-black/6 dark:ring-white/10"
-              >
-                {post.thumbnail ? (
-                  <Image
-                    src={post.thumbnail}
-                    alt={post.title}
-                    fill
-                    sizes="192px"
-                    className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.03]"
-                    {...(thumbnailPriority
-                      ? { priority: true }
-                      : { loading: 'lazy' as const })}
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-muted/90 to-muted">
-                    <Book className="w-8 h-8 text-muted-foreground/70" />
-                  </div>
-                )}
-              </AspectRatio>
-            </div>
-
-            <div>
-              <Badge
-                variant="outline"
-                labelRole="meta"
-                className="text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
-              >
-                <Calendar className="h-3 w-3 mr-1" />
+              <Badge variant="outline" labelRole="meta" className="w-fit shrink-0">
+                <Calendar className="size-3 shrink-0" aria-hidden />
                 {formatRelativeTime(post.created_at)}
               </Badge>
             </div>
+          </div>
+
+          <div className="relative hidden w-36 shrink-0 sm:block md:w-40">
+            <AspectRatio
+              ratio={16 / 9}
+              className="overflow-hidden rounded-lg bg-muted/50 ring-1 ring-inset ring-border/60"
+            >
+              {post.thumbnail ? (
+                <Image
+                  src={post.thumbnail}
+                  alt=""
+                  fill
+                  sizes="160px"
+                  className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.04]"
+                  {...(thumbnailPriority
+                    ? { priority: true }
+                    : { loading: 'lazy' as const })}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-muted/80 to-muted/40">
+                  <BookOpen className="size-8 text-muted-foreground/60" aria-hidden />
+                </div>
+              )}
+            </AspectRatio>
           </div>
         </div>
       </CardContent>

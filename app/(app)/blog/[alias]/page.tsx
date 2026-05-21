@@ -1,50 +1,43 @@
 import { getPostByAliasAPI } from '@/api/post'
 import { PostArticleHeader } from '@/components/Blog/PostArticleHeader'
+import { BlogArticleShell } from '@/components/Blog/blog-article-shell'
 import { Markdown } from '@/components/Md'
 import { Metadata } from 'next'
-import { Toc } from '@/components/Toc'
+import { FloatingToc } from '@/components/Toc'
 import { BackToTop } from '@/components/SideTool/back-to-top'
 import { ScrollReset } from '@/components/ScrollReset'
 import { getSEOConfig } from '@/utils/seo'
 import { cache } from 'react'
+import { cn } from '@/lib/utils'
+import { BLOG_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
 import type { PostVO } from '@/types/post'
 
 type Props = {
   params: Promise<{ alias: string }>
 }
 
-/** Markdown 含二级或三级标题时展示 TOC */
-const H2_OR_H3_HEADING = /^##\s|^###\s/m
-
 const getPostByAlias = cache(async (alias: string): Promise<PostVO> => {
   const { data } = await getPostByAliasAPI(alias)
   return data
 })
 
-function hasTocHeadings(content: string): boolean {
-  return H2_OR_H3_HEADING.test(content)
-}
-
 export default async function BlogContent({ params }: Props) {
   const { alias } = await params
   const post = await getPostByAlias(alias)
-  const showToc = hasTocHeadings(post.content)
 
   return (
     <>
       <ScrollReset />
-      <div className="relative text-default-600 flex flex-col gap-4 lg:flex-row p-2 lg:p-4">
-        <div className="w-full lg:w-4/5 px-4">
-          <PostArticleHeader post={post} />
-          <Markdown className="wrap-break-word overflow-x-auto" content={post.content} />
+      <BlogArticleShell>
+        <div className={cn('mx-auto w-full', BLOG_CONTENT_MAX_CLASS)}>
+          <article className="min-w-0">
+            <PostArticleHeader post={post} />
+            <Markdown className="wrap-break-word" content={post.content} />
+          </article>
         </div>
-        {showToc && (
-          <div className="hidden relative lg:block lg:w-1/5">
-            <Toc className="sticky top-20" content={post.content} />
-          </div>
-        )}
+        <FloatingToc content={post.content} />
         <BackToTop />
-      </div>
+      </BlogArticleShell>
     </>
   )
 }

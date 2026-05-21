@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Rss } from 'lucide-react'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
+import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
 import { SITE_NAV_LINKS, isSiteNavActive } from '@/lib/site-nav'
 import { cn } from '@/lib/utils'
 
@@ -21,7 +22,13 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
       )}
       {...props}
     >
-      <div className="grid w-full grid-cols-1 justify-items-center gap-y-4 px-4 py-4 sm:px-6 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:justify-items-stretch md:gap-x-8 md:gap-y-0 md:py-3.5">
+      <div
+        className={cn(
+          'mx-auto grid w-full grid-cols-1 justify-items-center gap-y-4 px-4 py-4 md:px-6',
+          'md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:justify-items-stretch md:gap-x-8 md:gap-y-0 md:py-3.5',
+          SITE_CONTENT_MAX_CLASS
+        )}
+      >
         <p className="text-center tabular-nums md:justify-self-start md:text-left">
           © {year}{' '}
           <span className="font-medium text-foreground/90">stellux</span>

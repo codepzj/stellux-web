@@ -8,7 +8,9 @@ import { SunIcon, MoonIcon } from '@/components/SvgIcon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
+import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
 import { SITE_NAV_LINKS, isSiteNavActive } from '@/lib/site-nav'
+import { cn } from '@/lib/utils'
 import './index.css'
 
 function DesktopNav() {
@@ -61,7 +63,12 @@ function ThemeToggle() {
 function MobileNav({ onClick }: { onClick: () => void }) {
   return (
     <div className="fixed inset-x-0 top-14 z-30 bg-white/90 dark:bg-black/70 border-b border-gray-200/60 dark:border-white/10">
-      <div className="flex flex-col space-y-3 px-4 py-3">
+      <div
+        className={cn(
+          'mx-auto flex flex-col space-y-3 px-4 py-3 md:px-6',
+          SITE_CONTENT_MAX_CLASS
+        )}
+      >
         {SITE_NAV_LINKS.map((item) => (
           <Link
             key={item.href}
@@ -101,7 +108,12 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-20 w-full bg-white/90 dark:bg-black/70 border-b border-gray-200/60 dark:border-white/10">
-      <div className="mx-auto flex h-14 items-center justify-between px-4 max-w-5xl">
+      <div
+        className={cn(
+          'mx-auto flex h-14 w-full items-center justify-between px-4 md:px-6',
+          SITE_CONTENT_MAX_CLASS
+        )}
+      >
         <Link
           href="/"
           className="flex items-center gap-2 md:gap-3 shrink-0 min-w-[120px] md:min-w-[140px]"

@@ -8,6 +8,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
 import GitHubCalendar from '@/components/Home/GitHubCalendar'
+import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
+import { cn } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,7 +61,12 @@ export default async function Page() {
     <div className="relative flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">
-        <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-8 sm:space-y-12">
+        <div
+          className={cn(
+            'mx-auto w-full px-4 py-8 sm:space-y-12 space-y-8 sm:py-12 md:px-6',
+            SITE_CONTENT_MAX_CLASS
+          )}
+        >
           {/* Hero Section */}
           {(config?.avatar || config?.name || config?.location || config?.bio || config?.github || config?.blog) && (
             <section className="flex flex-col sm:flex-row items-start gap-6">

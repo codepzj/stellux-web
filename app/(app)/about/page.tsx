@@ -7,7 +7,7 @@ export default async function About() {
   const config: PageContent = pageConfig.content
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <div className="w-full px-4 py-8 sm:py-12 md:px-6">
       <AboutContent config={config} />
     </div>
   )

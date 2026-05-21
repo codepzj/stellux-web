@@ -1,5 +1,6 @@
 'use client'
 
+import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
 import { cn } from '@/lib/utils'
 import Navbar from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
@@ -17,7 +18,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           'flex min-h-0 flex-1 flex-col',
           'group-data-[scroll-locked=1]/body:h-full',
           'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh',
-          'w-full mx-auto max-w-5xl'
+          'w-full mx-auto',
+          SITE_CONTENT_MAX_CLASS
         )}
       >
         {children}

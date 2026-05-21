@@ -1,7 +1,7 @@
 import { getDocumentByAlias } from '@/api/document'
 import { getAllDocumentContentByDocumentId } from '@/api/document-content'
 import { Markdown } from '@/components/Md'
-import { ScrollToc } from '@/components/Toc'
+import { FloatingToc } from '@/components/Toc'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { DocSidebar } from '@/components/Sidebar'
 import { convertToDocumentTreeData } from '@/utils/document-tree'
@@ -141,6 +141,8 @@ export default async function DocPage({ params }: DocPageProps) {
     }
   }
 
+  const markdownContent = documentContent?.content || ''
+
   return (
     <SidebarProvider style={{ '--sidebar-width': '256px' } as React.CSSProperties}>
       <DocSidebar
@@ -149,77 +151,72 @@ export default async function DocPage({ params }: DocPageProps) {
         className="hidden md:block fixed top-0 left-0"
       />
       <SidebarInset>
-        <div className="w-full flex flex-col md:flex-row justify-center gap-2 mt-8">
-          <div className="w-full lg:w-4/5 md:max-w-xl lg:max-w-3xl md:mr-4 mb-20 px-4 flex flex-col min-h-[calc(100vh-14rem)]">
-            <div className="text-3xl font-bold font-sans text-foreground tracking-tight text-balance py-4 mb-8">
-              {isRoot ? document?.title || '' : documentContent?.title || ''}
-            </div>
-            <div className="flex-1">
-              {isRoot ? (
-                <div className="mt-4">
-                  <div className="text-lg font-bold">👋  欢迎来到知识库</div>
-                  <div className="mt-2">知识库就像书一样，让多篇文档结构化，方便知识的创作与沉淀</div>
-                  <div className="mt-8"></div>
-                  <RootDocTreeList nodes={treeItems} activeUrl={currentUrl} />
+        <div className="mx-auto mb-20 mt-8 w-full max-w-3xl px-4">
+          <h1 className="mb-8 py-4 font-serif text-3xl font-bold tracking-tight text-balance text-foreground">
+            {isRoot ? document?.title || '' : documentContent?.title || ''}
+          </h1>
+          <div className="flex-1">
+            {isRoot ? (
+              <div className="mt-4">
+                <div className="text-lg font-bold">👋  欢迎来到知识库</div>
+                <div className="mt-2">
+                  知识库就像书一样，让多篇文档结构化，方便知识的创作与沉淀
                 </div>
-              ) : (
-                <Markdown
-                  className="pl-2 wrap-break-word overflow-x-auto"
-                  content={documentContent?.content || ''}
-                />
-              )}
-            </div>
-
-            {!isRoot && (prevPage || nextPage) && (
-              <div className="mt-28">
-                <div
-                  className={[
-                    'grid grid-cols-1 gap-4 sm:grid-cols-2',
-                    prevPage && !nextPage ? 'sm:*:first:col-start-1' : '',
-                    !prevPage && nextPage ? 'sm:*:first:col-start-2' : '',
-                  ].join(' ')}
-                >
-                  {prevPage ? (
-                    <Link
-                      href={prevPage.url}
-                      className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 hover:bg-primary/10 hover:text-foreground transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <ChevronLeft className="size-4 text-muted-foreground group-hover:text-foreground" />
-                        <span className="text-xs text-muted-foreground group-hover:text-foreground">
-                          上一页
-                        </span>
-                      </div>
-                      <div className="mt-2 text-sm font-medium line-clamp-2">{prevPage.title}</div>
-                    </Link>
-                  ) : null}
-
-                  {nextPage ? (
-                    <Link
-                      href={nextPage.url}
-                      className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 hover:bg-primary/10 hover:text-foreground transition-colors"
-                    >
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="text-xs text-muted-foreground group-hover:text-foreground">
-                          下一页
-                        </span>
-                        <ChevronRight className="size-4 text-muted-foreground group-hover:text-foreground" />
-                      </div>
-                      <div className="mt-2 text-sm font-medium line-clamp-2 text-right">
-                        {nextPage.title}
-                      </div>
-                    </Link>
-                  ) : null}
-                </div>
+                <div className="mt-8"></div>
+                <RootDocTreeList nodes={treeItems} activeUrl={currentUrl} />
               </div>
+            ) : (
+              <Markdown className="wrap-break-word" content={markdownContent} />
             )}
           </div>
-          <div className="hidden lg:block sticky top-8 h-[calc(100vh-1rem)] w-48 min-w-48 shrink-0 flex-none">
-            <ScrollToc
-              content={isRoot ? document?.description || '' : documentContent?.content || ''}
-            />
-          </div>
+
+          {!isRoot && (prevPage || nextPage) && (
+            <div className="mt-28">
+              <div
+                className={[
+                  'grid grid-cols-1 gap-4 sm:grid-cols-2',
+                  prevPage && !nextPage ? 'sm:*:first:col-start-1' : '',
+                  !prevPage && nextPage ? 'sm:*:first:col-start-2' : '',
+                ].join(' ')}
+              >
+                {prevPage ? (
+                  <Link
+                    href={prevPage.url}
+                    className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 transition-colors hover:bg-primary/10 hover:text-foreground"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ChevronLeft className="size-4 text-muted-foreground group-hover:text-foreground" />
+                      <span className="text-xs text-muted-foreground group-hover:text-foreground">
+                        上一页
+                      </span>
+                    </div>
+                    <div className="mt-2 line-clamp-2 text-sm font-medium">{prevPage.title}</div>
+                  </Link>
+                ) : null}
+
+                {nextPage ? (
+                  <Link
+                    href={nextPage.url}
+                    className="group rounded-lg border border-border/60 bg-background/40 px-4 py-3 transition-colors hover:bg-primary/10 hover:text-foreground"
+                  >
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="text-xs text-muted-foreground group-hover:text-foreground">
+                        下一页
+                      </span>
+                      <ChevronRight className="size-4 text-muted-foreground group-hover:text-foreground" />
+                    </div>
+                    <div className="mt-2 line-clamp-2 text-right text-sm font-medium">
+                      {nextPage.title}
+                    </div>
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+          )}
         </div>
+        {!isRoot && (
+          <FloatingToc content={markdownContent} className="bottom-28" />
+        )}
         <SidebarToggle />
         <BackToTop />
       </SidebarInset>

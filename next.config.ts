@@ -21,7 +21,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  output: 'standalone',
   experimental: {
     turbopackFileSystemCacheForDev: true, // 开发环境文件系统缓存，提高开发效率
   },

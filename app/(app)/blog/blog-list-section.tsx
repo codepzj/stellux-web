@@ -1,12 +1,7 @@
 import Link from 'next/link'
-import { Tag, Book, FolderOpen } from 'lucide-react'
-import { Search } from './search'
+import { Tag, FolderOpen, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from '@/components/ui/pagination'
+import { Pagination, PaginationContent, PaginationItem } from '@/components/ui/pagination'
 import { cn } from '@/lib/utils'
 import type { PostVO } from '@/types/post'
 import type { BlogListPagination } from '@/lib/blog-list'
@@ -16,6 +11,8 @@ import {
   paginationFilters,
 } from '@/lib/blog-list'
 import { BlogPostCard } from './blog-post-card'
+import { BlogListHeader } from '@/components/Blog/blog-list-header'
+import { BlogListShell } from '@/components/Blog/blog-list-shell'
 
 type BlogListSectionProps = {
   posts: PostVO[]
@@ -32,86 +29,100 @@ export function BlogListSection({
 }: BlogListSectionProps) {
   const { tag: navTag, category: navCategory } = paginationFilters(tagName, categoryName)
   const pageItems = getPaginationWindow(pagination.total_page, pagination.page_no)
+  const hasFilter = Boolean(tagName || categoryName)
+  const prevPage = pagination.page_no > 1 ? pagination.page_no - 1 : null
+  const nextPage =
+    pagination.page_no < pagination.total_page ? pagination.page_no + 1 : null
 
   return (
-    <div className="dark:bg-gray-950 min-h-screen">
-      <div className="w-full">
-        <div className="container mx-auto px-4 py-12 md:px-6 md:py-24">
-          <div className="max-w-5xl mx-auto space-y-12">
-            <section className="space-y-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <Book className="w-6 h-6" />
-                  <span className="text-xl font-semibold">Posts</span>
-                  <span className="text-gray-700 dark:text-gray-300 text-sm ml-2 font-medium">
-                    {pagination.total_count} 篇
-                  </span>
-                </div>
-                <Search className="md:w-52" />
-              </div>
+    <BlogListShell>
+      <BlogListHeader totalCount={pagination.total_count} />
 
-              {(tagName || categoryName) && (
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {categoryName && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-background text-foreground shadow-xs border border-border/60 text-sm">
-                      <FolderOpen className="h-3 w-3" />
-                      {categoryName}
-                    </span>
-                  )}
-                  {tagName && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-background text-foreground shadow-xs border border-border/60 text-sm">
-                      <Tag className="h-3 w-3" />
-                      {tagName}
-                    </span>
-                  )}
-                  <Link
-                    href="/blog"
-                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-transparent text-xs text-muted-foreground transition-colors hover:border-border hover:text-foreground ml-1"
-                    scroll
-                  >
-                    ✕
-                  </Link>
-                </div>
-              )}
-              <div className="flex flex-col gap-4 min-h-[600px]">
-                {posts.map((post, index) => (
-                  <BlogPostCard
-                    key={post.id}
-                    post={post}
-                    thumbnailPriority={index === 0}
-                  />
-                ))}
-              </div>
-              <div className="h-8" />
-              {pagination.total_page > 1 && (
-                <div className="flex justify-end">
-                  <Pagination className="justify-end">
-                    <PaginationContent>
-                      {pageItems.map((page) => (
-                        <PaginationItem key={page}>
-                          <Link
-                            href={`/blog?${buildBlogListQuery(page, navTag, navCategory)}`}
-                            scroll
-                            className={cn(
-                              buttonVariants({
-                                variant: page === pagination.page_no ? 'outline' : 'ghost',
-                                size: 'icon',
-                              })
-                            )}
-                            aria-current={page === pagination.page_no ? 'page' : undefined}
-                          >
-                            {page}
-                          </Link>
-                        </PaginationItem>
-                      ))}
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              )}
-            </section>
-          </div>
+      {hasFilter && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">当前筛选</span>
+          {categoryName && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-sm text-foreground">
+              <FolderOpen className="size-3.5 text-muted-foreground" aria-hidden />
+              {categoryName}
+            </span>
+          )}
+          {tagName && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-muted/40 px-2.5 py-1 text-sm text-foreground">
+              <Tag className="size-3.5 text-muted-foreground" aria-hidden />
+              {tagName}
+            </span>
+          )}
+          <Link
+            href="/blog"
+            scroll
+            className={cn(
+              buttonVariants({ variant: 'ghost', size: 'sm' }),
+              'h-8 gap-1 rounded-full px-2.5 text-muted-foreground'
+            )}
+            aria-label="清除筛选"
+          >
+            <X className="size-3.5" aria-hidden />
+            清除
+          </Link>
         </div>
+      )}
+
+      <div className="flex flex-col gap-3">
+        {posts.map((post, index) => (
+          <BlogPostCard key={post.id} post={post} thumbnailPriority={index === 0} />
+        ))}
       </div>
-    </div>
+
+      {pagination.total_page > 1 && (
+        <Pagination className="justify-center pt-2 md:justify-end">
+          <PaginationContent>
+            {prevPage && (
+              <PaginationItem>
+                <Link
+                  href={`/blog?${buildBlogListQuery(prevPage, navTag, navCategory)}`}
+                  scroll
+                  className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1')}
+                  aria-label="上一页"
+                >
+                  <ChevronLeft className="size-4" aria-hidden />
+                  <span className="hidden sm:inline">上一页</span>
+                </Link>
+              </PaginationItem>
+            )}
+            {pageItems.map((page) => (
+              <PaginationItem key={page}>
+                <Link
+                  href={`/blog?${buildBlogListQuery(page, navTag, navCategory)}`}
+                  scroll
+                  className={cn(
+                    buttonVariants({
+                      variant: page === pagination.page_no ? 'outline' : 'ghost',
+                      size: 'icon',
+                    })
+                  )}
+                  aria-current={page === pagination.page_no ? 'page' : undefined}
+                >
+                  {page}
+                </Link>
+              </PaginationItem>
+            ))}
+            {nextPage && (
+              <PaginationItem>
+                <Link
+                  href={`/blog?${buildBlogListQuery(nextPage, navTag, navCategory)}`}
+                  scroll
+                  className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1')}
+                  aria-label="下一页"
+                >
+                  <span className="hidden sm:inline">下一页</span>
+                  <ChevronRight className="size-4" aria-hidden />
+                </Link>
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
+      )}
+    </BlogListShell>
   )
 }

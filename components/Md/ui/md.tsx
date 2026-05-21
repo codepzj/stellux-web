@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -81,7 +81,7 @@ export default function Md({ content, className }: { content: string; className?
     <PhotoProvider>
       <article
         className={cn(
-          'markdown-body overflow-x-auto overflow-y-hidden pb-12 font-sans text-pretty antialiased md:pb-16 lg:pb-20',
+          'markdown-body overflow-x-auto overflow-y-hidden pb-12 font-sans text-pretty text-foreground antialiased md:pb-16 lg:pb-20',
           className
         )}
       >
@@ -90,14 +90,14 @@ export default function Md({ content, className }: { content: string; className?
           remarkPlugins={[remarkGfm, remarkMath, addHeaderIdPlugin]}
           components={{
             h1: ({ children }) => (
-              <h1 className="markdown-heading scroll-m-16 text-balance text-center text-4xl font-bold tracking-normal text-gray-900 dark:text-gray-100">
+              <h1 className="markdown-heading scroll-m-20 font-serif text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                 {children}
               </h1>
             ),
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-16 text-balance text-center text-3xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
+                className="markdown-heading scroll-m-20 mt-12 font-serif text-balance text-2xl font-bold tracking-tight text-foreground md:text-3xl"
                 {...props}
               >
                 {children}
@@ -106,44 +106,29 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-16 text-balance text-center text-2xl font-bold tracking-normal text-gray-900 dark:text-gray-100"
+                className="markdown-heading scroll-m-20 mt-10 text-balance text-xl font-semibold tracking-tight text-foreground md:text-2xl"
                 {...props}
               >
                 {children}
               </h3>
             ),
-            h4: ({ children }) => (
-              <h4 className="markdown-heading scroll-m-16 text-balance text-center text-xl font-semibold tracking-normal text-gray-900 dark:text-gray-100">
-                {children}
-              </h4>
-            ),
-            h5: ({ children }) => (
-              <h5 className="markdown-heading scroll-m-16 text-balance text-center text-lg font-semibold tracking-normal text-gray-900 dark:text-gray-100">
-                {children}
-              </h5>
-            ),
-            h6: ({ children }) => (
-              <h6 className="markdown-heading scroll-m-16 text-balance text-center text-base font-semibold tracking-normal text-gray-900 dark:text-gray-100">
-                {children}
-              </h6>
-            ),
             p: ({ children }) => (
-              <p className="my-8 text-base leading-relaxed text-gray-800 dark:text-gray-100">
+              <p className="my-6 text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
                 {children}
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="my-8 list-inside list-disc space-y-3 pl-0! text-base leading-[1.85] text-gray-800 dark:text-gray-100">
+              <ul className="my-6 list-inside list-disc space-y-2 pl-0! text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="my-8 list-inside list-decimal space-y-3 pl-0! text-base leading-[1.85] text-gray-800 dark:text-gray-100">
+              <ol className="my-6 list-inside list-decimal space-y-2 pl-0! text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
                 {children}
               </ol>
             ),
             li: ({ children }) => (
-              <li className="text-base leading-[1.85] text-gray-800 dark:text-gray-100 [&>p]:my-2">
+              <li className="text-[15px] leading-[1.85] text-foreground/90 md:text-base [&>p]:my-2">
                 {children}
               </li>
             ),
@@ -152,7 +137,7 @@ export default function Md({ content, className }: { content: string; className?
                 <Image
                   width={1000}
                   height={1000}
-                  className="my-8 rounded-md"
+                  className="my-8 rounded-lg ring-1 ring-border/50"
                   src={src as string}
                   alt={alt as string}
                 />
@@ -161,13 +146,13 @@ export default function Md({ content, className }: { content: string; className?
             a: ({ children, href }) => (
               <a
                 href={href as string}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2 transition-colors duration-200"
+                className="font-medium text-primary underline decoration-primary/30 underline-offset-[3px] transition-colors hover:text-primary/80"
               >
                 {children}
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="my-10 overflow-x-auto rounded-lg border border-zinc-200/60 bg-zinc-100/70 p-0.5! font-mono text-sm leading-relaxed dark:border-zinc-600/80 dark:bg-zinc-950 dark:text-zinc-100">
+              <pre className="my-8 overflow-x-auto rounded-xl border border-border/70 bg-muted/40 p-0.5! font-mono text-sm leading-relaxed">
                 {children}
               </pre>
             ),
@@ -194,7 +179,7 @@ export default function Md({ content, className }: { content: string; className?
                 return (
                   <div className="not-prose relative rounded-md text-sm">
                     <div
-                      className="overflow-x-auto p-4 bg-zinc-100/70 dark:bg-zinc-900/40 rounded-b-md"
+                      className="overflow-x-auto rounded-b-[calc(var(--radius-xl)-2px)] bg-muted/50 p-4"
                       id={id}
                       suppressHydrationWarning
                     >
@@ -207,7 +192,7 @@ export default function Md({ content, className }: { content: string; className?
 
               // 单行代码块
               return (
-                <code className="rounded-md bg-zinc-100/70 dark:bg-zinc-800/50 mx-0.5! px-1 py-1 text-sm! text-gray-800 dark:text-gray-100 font-mono border border-zinc-200/60 dark:border-zinc-700/60">
+                <code className="mx-0.5! rounded-md border border-border/60 bg-muted/60 px-1.5 py-0.5 font-mono text-sm! text-foreground">
                   {children}
                 </code>
               )

@@ -12,7 +12,7 @@ export function SidebarToggle() {
       aria-label="折叠侧边栏"
       size="icon"
       variant="outline"
-      className="fixed z-50 bottom-20 right-6 shadow-lg rounded-full bg-white"
+      className="fixed bottom-16 right-6 z-60 size-9 rounded-full border-border/80 bg-background/90 shadow-md backdrop-blur-sm hover:bg-background"
       onClick={toggleSidebar}
     >
       <PanelRightOpen className="w-5 h-5" />

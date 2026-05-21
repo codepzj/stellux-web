@@ -13,3 +13,10 @@ export function estimateMarkdownCharCount(markdown: string): number {
   const noInline = noFences.replace(/`[^`]*`/g, '')
   return noInline.replace(/\s/g, '').length
 }
+
+/** 中文阅读约 400 字/分钟 */
+export function estimateReadingMinutes(markdown: string): number {
+  const chars = estimateMarkdownCharCount(markdown)
+  if (chars <= 0) return 0
+  return Math.max(1, Math.round(chars / 400))
+}

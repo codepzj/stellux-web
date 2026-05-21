@@ -11,7 +11,7 @@ export default function AboutContent({ config }: AboutContentProps) {
   const interests = config.interests
 
   return (
-    <div className="max-w-5xl mx-auto space-y-10 sm:space-y-14">
+    <div className="space-y-10 sm:space-y-14">
       {/* Skills Section */}
       <section className="space-y-4">
         <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">

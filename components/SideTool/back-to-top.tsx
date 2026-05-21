@@ -9,7 +9,7 @@ export function BackToTop() {
       aria-label="回到顶部"
       size="icon"
       variant="outline"
-      className="fixed z-50 bottom-6 right-6 shadow-lg rounded-full bg-white"
+      className="fixed bottom-6 right-6 z-60 rounded-full border-border/80 bg-background/90 shadow-md backdrop-blur-sm"
       onClick={() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }}
