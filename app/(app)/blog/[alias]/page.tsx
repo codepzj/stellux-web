@@ -68,7 +68,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [image],
     },
     authors: [{ name: seoConfig.author }],
-    metadataBase: new URL(url),
   }
 }
 

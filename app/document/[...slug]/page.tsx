@@ -274,6 +274,5 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
       description,
       images: image ? [image] : [],
     },
-    metadataBase: new URL(url),
   }
 }
