@@ -29,7 +29,7 @@ export function DocumentCard({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-5">
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5 sm:gap-3">
             <div className="min-w-0">
-              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:text-lg md:text-xl">
+              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground group-hover:text-primary sm:text-lg md:text-xl">
                 {doc.title}
               </h2>
               {doc.description ? (

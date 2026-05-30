@@ -46,7 +46,7 @@ export function BlogPostCard({
                   </Badge>
                 </div>
               ) : null}
-              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:text-lg md:text-xl">
+              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground group-hover:text-primary sm:text-lg md:text-xl">
                 {post.title}
               </h2>
               {post.description ? (

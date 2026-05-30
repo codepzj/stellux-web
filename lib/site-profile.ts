@@ -1,5 +1,7 @@
 import type { PageContent } from '@/types/page'
 
+export const GITHUB_REPO_URL = 'https://github.com/codepzj/stellux-web'
+
 export const HOME_PROFILE: Partial<PageContent> = {
   name: '浩瀚星河',
   avatar: 'https://cdn.jsdelivr.net/gh/codepzj/images@main/20250529174726187.jpeg',

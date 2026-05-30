@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Rss } from 'lucide-react'
+import { GithubIcon } from '@/components/SvgIcon'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
+import { GITHUB_REPO_URL } from '@/lib/site-profile'
 import { SITE_NAV_LINKS, isSiteNavActive } from '@/lib/site-nav'
 import { cn } from '@/lib/utils'
 
 export function Footer({ className, ...props }: React.ComponentProps<'footer'>) {
-  const year = new Date().getFullYear()
   const pathname = usePathname()
 
   return (
@@ -17,7 +18,7 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
       role="contentinfo"
       className={cn(
         'mt-auto w-full border-t border-border/60 bg-background',
-        'text-xs text-muted-foreground transition-colors duration-200',
+        'text-xs text-muted-foreground',
         className
       )}
       {...props}
@@ -29,9 +30,16 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
           SITE_CONTENT_MAX_CLASS
         )}
       >
-        <p className="text-center tabular-nums md:justify-self-start md:text-left">
-          © {year}{' '}
-          <span className="font-medium text-foreground/90">stellux</span>
+        <p className="text-center md:justify-self-start md:text-left">
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-1.5 font-medium text-foreground/90 hover:text-foreground"
+          >
+            <GithubIcon size={14} aria-hidden />
+            stellux
+          </a>
         </p>
 
         <nav
@@ -45,7 +53,7 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'cursor-pointer font-medium transition-colors duration-200',
+                  'cursor-pointer font-medium',
                   active ? 'text-foreground' : 'hover:text-foreground'
                 )}
               >
@@ -59,7 +67,7 @@ export function Footer({ className, ...props }: React.ComponentProps<'footer'>) 
             aria-label="RSS 订阅"
             title="RSS"
             className={cn(
-              'inline-flex cursor-pointer rounded-sm p-0.5 text-muted-foreground transition-colors duration-200',
+              'inline-flex cursor-pointer rounded-sm p-0.5 text-muted-foreground',
               'hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
             )}
           >
