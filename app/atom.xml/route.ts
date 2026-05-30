@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const posts = await getAllPublishPostAPI()
     const config = await getConfigMapAPI()
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin
+    const siteUrl = request.nextUrl.origin
 
 
     const SEOTitle = config?.data?.seo.Content.SEOTitle

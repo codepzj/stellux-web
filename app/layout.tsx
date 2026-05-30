@@ -15,25 +15,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <link
           rel="icon"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/favicon.ico`}
+          href='/favicon.ico'
           type="image/x-icon"
         />
         <link
           rel="shortcut icon"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/favicon.ico`}
+          href='/favicon.ico'
           type="image/x-icon"
         />
         <link
           rel="alternate"
           type="application/rss+xml"
           title="RSS Feed"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/rss.xml`}
+          href='/rss.xml'
         />
         <link
           rel="alternate"
           type="application/atom+xml"
           title="Atom Feed"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/atom.xml`}
+          href='/atom.xml'
         />
         <meta
           name="google-site-verification"

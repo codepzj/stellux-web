@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { title, description, thumbnail: image, category, tags } = post
   const keywords = [category, ...(tags ?? [])].filter(Boolean)
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/blog/${alias}`
+  const url = `/blog/${alias}`
 
   return {
     title,

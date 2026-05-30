@@ -4,7 +4,7 @@ import { getAllPublishPostAPI } from '@/api/post'
 export async function GET(request: NextRequest) {
   try {
     const posts = await getAllPublishPostAPI()
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+    const siteUrl = request.nextUrl.origin
 
     // 确保 posts.data 存在且为数组，同时检查 API 返回状态
     const postsData = posts?.code === 200 && posts?.data ? posts.data : []
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Sitemap generation error:', error)
     // 即使出错也返回基本的 sitemap，包含静态页面
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const siteUrl = request.nextUrl.origin
     const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>

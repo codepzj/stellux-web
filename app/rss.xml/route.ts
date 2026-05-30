@@ -5,7 +5,7 @@ import { getSEOConfig } from '@/utils/seo'
 export async function GET(request: NextRequest) {
   try {
     const posts = await getAllPublishPostAPI()
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+    const siteUrl = request.nextUrl.origin
     const seoConfig = await getSEOConfig()
 
     // 确保 posts.data 存在且为数组
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('RSS generation error:', error)
     // 即使出错也返回基本的 RSS，包含频道信息
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const siteUrl = request.nextUrl.origin
     const fallbackRss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>

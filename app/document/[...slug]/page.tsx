@@ -253,7 +253,7 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
     ? document?.description || ''
     : documentContent?.content?.substring(0, 200) || ''
   const image = document?.thumbnail
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL}/document/${rootAlias}${
+  const url = `/document/${rootAlias}${
     subAlias ? `/${subAlias}` : ''
   }`
 
