@@ -1,7 +1,6 @@
 export const SITE_NAV_LINKS = [
   { href: '/blog', label: 'Posts' },
   { href: '/document', label: 'Docs' },
-  { href: '/about', label: 'About' },
   { href: '/friends', label: 'Friends' },
 ] as const
 

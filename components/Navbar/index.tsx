@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTheme } from 'next-themes'
-import { SunIcon, MoonIcon } from '@/components/SvgIcon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getActivePageConfigAPI } from '@/api/page'
 import { PageContent } from '@/types/page'
@@ -40,34 +38,11 @@ function DesktopNav() {
   )
 }
 
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
-
-  return (
-    <button
-      onClick={toggleTheme}
-      className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-      aria-label="切换主题"
-    >
-      {/* 同时渲染两个图标，依赖 html.dark 类控制显示，避免首次客户端插入造成闪烁 */}
-      <SunIcon size={18} className="hidden dark:inline text-gray-600 dark:text-gray-300" />
-      <MoonIcon size={18} className="inline dark:hidden text-gray-600 dark:text-gray-300" />
-    </button>
-  )
-}
-
 function MobileNav({ onClick }: { onClick: () => void }) {
   return (
     <div className="fixed inset-x-0 top-14 z-30 bg-white/90 dark:bg-black/70 border-b border-gray-200/60 dark:border-white/10">
       <div
-        className={cn(
-          'mx-auto flex flex-col space-y-3 px-4 py-3 md:px-6',
-          SITE_CONTENT_MAX_CLASS
-        )}
+        className={cn('mx-auto flex flex-col space-y-3 px-4 py-3 md:px-6', SITE_CONTENT_MAX_CLASS)}
       >
         {SITE_NAV_LINKS.map((item) => (
           <Link
