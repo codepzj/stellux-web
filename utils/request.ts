@@ -20,14 +20,12 @@ export async function request<T>(
 ): Promise<Response<T>> {
   const { params, body, cache, revalidate } = options
 
-  // 构建 URL
   let fullUrl = `${baseUrl}${url}`
   if (params) {
     const query = new URLSearchParams(params).toString()
     fullUrl += `?${query}`
   }
 
-  // 请求配置
   const fetchOptions: RequestInit & { next?: { revalidate: number } } = {
     method,
     headers: { 'Content-Type': 'application/json' },
@@ -37,6 +35,16 @@ export async function request<T>(
 
   try {
     const res = await fetch(fullUrl, fetchOptions)
+    const contentType = res.headers.get('content-type') ?? ''
+
+    if (!contentType.includes('application/json')) {
+      const text = (await res.text()).trim()
+      return {
+        code: res.status,
+        error: text || res.statusText || 'invalid response',
+      } as Response<T>
+    }
+
     return await res.json()
   } catch (err) {
     console.error('request error:', err)

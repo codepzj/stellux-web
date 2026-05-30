@@ -110,7 +110,7 @@ export default function FriendSubmitModal() {
                   value={avatarUrl}
                   onChange={(e) => setAvatarUrl(e.target.value)}
                   required
-                  placeholder="https://cdn.codepzj.cn/image/20250529174726187.jpeg"
+                  placeholder="https://cdn.jsdelivr.net/gh/codepzj/images@main/20250529174726187.jpeg"
                 />
               </div>
               <div className="space-y-1">

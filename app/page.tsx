@@ -2,8 +2,8 @@ import Navbar from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { GitPullRequest, Globe, MapPin, FileText, Calendar, ArrowRight, Quote } from 'lucide-react'
 import { getAllPublishPostAPI } from '@/api/post'
-import { getActivePageConfigAPI } from '@/api/page'
-import { PageContent } from '@/types/page'
+import { HOME_PROFILE } from '@/lib/site-profile'
+import type { PageContent } from '@/types/page'
 import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
@@ -36,15 +36,10 @@ function extractGitHubUsername(githubUrl: string | undefined): string | null {
 }
 
 export default async function Page() {
-  const [postsResult, pageConfigResult] = await Promise.allSettled([
-    getAllPublishPostAPI(),
-    getActivePageConfigAPI('home'),
-  ])
+  const postsResult = await Promise.allSettled([getAllPublishPostAPI()])
+  const posts = postsResult[0].status === 'fulfilled' ? postsResult[0].value.data : null
 
-  const posts = postsResult.status === 'fulfilled' ? postsResult.value.data : null
-  const pageConfig = pageConfigResult.status === 'fulfilled' ? pageConfigResult.value.data : null
-
-  const config: PageContent | undefined = pageConfig?.content
+  const config: PageContent | undefined = HOME_PROFILE as PageContent
   const shouldShowRecentPosts = config?.show_recent_posts === true
   const recentPosts =
     shouldShowRecentPosts && posts

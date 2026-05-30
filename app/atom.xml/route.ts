@@ -1,32 +1,26 @@
 import { NextRequest } from 'next/server'
 import { getAllPublishPostAPI } from '@/api/post'
-import { getConfigMapAPI } from '@/api/config'
+import { getSEOConfig } from '@/utils/seo'
 
 export async function GET(request: NextRequest) {
   try {
     const posts = await getAllPublishPostAPI()
-    const config = await getConfigMapAPI()
+    const seoConfig = await getSEOConfig()
     const siteUrl = request.nextUrl.origin
 
-
-    const SEOTitle = config?.data?.seo.Content.SEOTitle
-    const SEOAuthor = config?.data?.seo.Content.SEOAuthor
-    const SEODescription = config?.data?.seo.Content.SEODescription
-
-    // 确保 posts.data 存在且为数组，同时检查 API 返回状态
     const postsData = posts?.code === 200 && posts?.data ? posts.data : []
 
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>${SEOTitle}</title>
+  <title>${seoConfig.title}</title>
   <link href="${siteUrl}" />
   <link href="${siteUrl}/atom.xml" rel="self" type="application/atom+xml" />
   <id>${siteUrl}/</id>
   <updated>${new Date().toISOString()}</updated>
   <author>
-    <name>${SEOAuthor}</name>
+    <name>${seoConfig.author}</name>
   </author>
-  <subtitle>${SEODescription}</subtitle>
+  <subtitle>${seoConfig.description}</subtitle>
   ${postsData
     .map(
       (post) => `
@@ -55,4 +49,4 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export const revalidate = 3600 // 1 hour
+export const revalidate = 3600

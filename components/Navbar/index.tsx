@@ -1,12 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Skeleton } from '@/components/ui/skeleton'
-import { getActivePageConfigAPI } from '@/api/page'
-import { PageContent } from '@/types/page'
 import { SITE_CONTENT_MAX_CLASS } from '@/lib/blog-layout'
+import { HOME_PROFILE } from '@/lib/site-profile'
 import { SITE_NAV_LINKS, isSiteNavActive } from '@/lib/site-nav'
 import { cn } from '@/lib/utils'
 import './index.css'
@@ -61,25 +59,6 @@ function MobileNav({ onClick }: { onClick: () => void }) {
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [pageConfig, setPageConfig] = useState<PageContent | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const response = await getActivePageConfigAPI('home')
-        if (response.data?.content) {
-          setPageConfig(response.data.content)
-        }
-      } catch (error) {
-        console.error('获取主页配置失败:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchConfig()
-  }, [])
 
   return (
     <header className="sticky top-0 z-20 w-full bg-white/90 dark:bg-black/70 border-b border-gray-200/60 dark:border-white/10">
@@ -93,31 +72,22 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 md:gap-3 shrink-0 min-w-[120px] md:min-w-[140px]"
         >
-          {isLoading ? (
-            <Skeleton className="w-7 h-7 md:w-8 md:h-8 rounded-full shrink-0" />
-          ) : pageConfig?.avatar ? (
+          {HOME_PROFILE.avatar ? (
             <img
-              src={pageConfig.avatar}
+              src={HOME_PROFILE.avatar}
               alt="avatar"
               className="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover"
               loading="lazy"
             />
           ) : null}
-          {isLoading ? (
-            <Skeleton className="h-5 w-24 md:w-28 rounded" />
-          ) : (
-            <span className="text-[15px] font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
-              {pageConfig?.name || 'Stellux'}
-            </span>
-          )}
+          <span className="text-[15px] font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
+            {HOME_PROFILE.name}
+          </span>
         </Link>
 
-        {/* 桌面导航 */}
         <DesktopNav />
 
-        {/* 右侧操作区 */}
         <div className="flex items-center space-x-2">
-          {/* 移动端菜单按钮 */}
           <button
             className="md:hidden text-gray-700 dark:text-gray-200 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
             onClick={() => setIsMenuOpen((v) => !v)}
@@ -150,7 +120,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 移动端菜单 */}
       {isMenuOpen && <MobileNav onClick={() => setIsMenuOpen(false)} />}
     </header>
   )
