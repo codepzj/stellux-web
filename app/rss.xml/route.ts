@@ -54,9 +54,9 @@ export async function GET(request: NextRequest) {
     const fallbackRss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Gopher</title>
+    <title>浩瀚星河</title>
     <link>${siteUrl}</link>
-    <description>Gopher的个人技术博客,记录Golang学习与开发实践。</description>
+    <description>浩瀚星河的个人技术博客,记录Golang学习与开发实践。</description>
     <language>zh-CN</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
