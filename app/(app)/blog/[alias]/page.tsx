@@ -5,7 +5,9 @@ import { Markdown } from '@/components/Md'
 import { Metadata } from 'next'
 import { FloatingToc } from '@/components/Toc'
 import { BackToTop } from '@/components/SideTool/back-to-top'
+import { ScrollToComment } from '@/components/SideTool/scroll-to-comment'
 import { ScrollReset } from '@/components/ScrollReset'
+import { CommentSection } from '@/components/Comment/comment-section'
 import { getSEOConfig } from '@/utils/seo'
 import { cache } from 'react'
 import { cn } from '@/lib/utils'
@@ -34,8 +36,10 @@ export default async function BlogContent({ params }: Props) {
             <PostArticleHeader post={post} />
             <Markdown className="wrap-break-word" content={post.content} />
           </article>
+          <CommentSection postId={post.id} />
         </div>
         <FloatingToc content={post.content} />
+        <ScrollToComment />
         <BackToTop />
       </BlogArticleShell>
     </>

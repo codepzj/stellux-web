@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { Clock, Leaf, Pencil, Pilcrow } from 'lucide-react'
+import { Clock, Pencil, Pilcrow, Timer } from 'lucide-react'
 
 /**
  * 博客/文档等 MD 页面的统一骨架屏
@@ -22,8 +22,8 @@ export function MdPageSkeleton({ contentClassName }: { contentClassName?: string
             <Skeleton className="h-3.5 w-14 rounded" />
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
-            <Leaf className="size-3.5 shrink-0 opacity-80" />
-            <Skeleton className="h-3.5 w-10 rounded" />
+            <Timer className="size-3.5 shrink-0 opacity-80" />
+            <Skeleton className="h-3.5 w-16 rounded" />
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Pilcrow className="size-3.5 shrink-0 opacity-80" />

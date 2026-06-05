@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { PostVO } from '@/types/post'
-import { Clock, Leaf, Pencil, Pilcrow, Tag } from 'lucide-react'
+import { Clock, Leaf, Pencil, Pilcrow, Tag, Timer } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buildBlogListQuery } from '@/lib/blog-list'
 import {
@@ -52,6 +52,7 @@ export function PostArticleHeader({ post, className }: Props) {
           )}
           {readingMinutes > 0 && (
             <span className="inline-flex items-center gap-1.5" title="预计阅读时长">
+              <Timer className="size-3.5 shrink-0 opacity-80" aria-hidden />
               <span className="tabular-nums">约 {readingMinutes} 分钟</span>
             </span>
           )}
@@ -68,11 +69,7 @@ export function PostArticleHeader({ post, className }: Props) {
         {tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/blog?${buildBlogListQuery(1, tag, undefined)}`}
-                scroll
-              >
+              <Link key={tag} href={`/blog?${buildBlogListQuery(1, tag, undefined)}`} scroll>
                 <Badge variant="outline" labelRole="tag" className="cursor-pointer">
                   <Tag className="size-3" aria-hidden />
                   {tag}
