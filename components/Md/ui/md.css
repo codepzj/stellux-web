@@ -146,11 +146,25 @@
   max-width: min(100%, 72ch);
 }
 
-/* 列表：覆盖 github-markdown 的左侧缩进，符号与序号顶格（list-inside） */
+/* 列表：outside 避免 li 内块级 <p> 与 marker 分行 */
 .markdown-body :where(ul, ol) {
-  padding-left: 0;
+  padding-left: 1.5em;
   margin-left: 0;
-  list-style-position: inside;
+  list-style-position: outside;
+}
+
+.markdown-body li > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li > p:first-child {
+  display: inline;
+}
+
+.markdown-body li > p:not(:first-child) {
+  display: block;
+  margin-top: 0.5em;
 }
 
 .markdown-body li > :where(ul, ol) {
@@ -268,15 +282,137 @@
   }
 }
 
+/* KaTeX：块级公式与含公式的段落居中 */
+.markdown-body .katex-display {
+  display: block;
+  margin: 1.25em 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown-body .katex-display > .katex {
+  display: inline-block;
+  text-align: center;
+}
+
+.markdown-body p:has(.katex),
+.markdown-body li:has(.katex) {
+  text-align: center;
+}
+
 /*
- * GFM 默认 table 为 display:block + width:max-content，短文本时表格只占内容宽度。
- * 改为至少占满正文一行；列仍按内容分配，多余宽度由 auto 表格布局消化；超宽时由外层 overflow-x 滚动。
+ * GFM 表格：全宽、仅横线分隔、表头与正文层次清晰，适配深浅色。
  */
-.markdown-body table {
-  display: table;
-  width: auto;
-  min-width: 100%;
-  max-width: none;
+.markdown-body .md-table-wrap {
+  margin: 1.75em 0 2em;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: transparent;
+}
+
+.markdown-body .md-table-wrap table {
+  display: table !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0;
+  border: 0;
+  border-collapse: collapse;
+  table-layout: fixed !important;
   overflow: visible;
-  table-layout: auto;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  font-variant-numeric: tabular-nums;
+}
+
+.markdown-body .md-table-wrap thead {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--bgColor-muted) 88%, var(--bgColor-default)) 0%,
+    var(--bgColor-muted) 100%
+  );
+}
+
+.markdown-body .md-table-wrap th {
+  padding: 0.8125rem 1.125rem;
+  border: 0;
+  border-bottom: 1px solid var(--borderColor-default);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  text-align: left;
+  vertical-align: middle;
+  color: color-mix(in oklch, var(--fgColor-muted) 92%, var(--fgColor-default));
+  white-space: nowrap;
+}
+
+.markdown-body .md-table-wrap td {
+  padding: 0.875rem 1.125rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--borderColor-muted) 75%, transparent);
+  vertical-align: middle;
+  color: var(--fgColor-default);
+}
+
+/* 多列表格：首列左对齐，其余列居中，避免右侧大面积留白 */
+.markdown-body .md-table-wrap th:not(:first-child),
+.markdown-body .md-table-wrap td:not(:first-child) {
+  text-align: center;
+}
+
+.markdown-body .md-table-wrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* 首列多为指标/数值，等宽数字更易扫读 */
+.markdown-body .md-table-wrap td:first-child {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fgColor-default);
+  white-space: nowrap;
+}
+
+/* 三列表格常见「指标 | 等级 | 说明」：居中等级列、弱化说明列 */
+.markdown-body .md-table-wrap table:has(thead th:nth-child(3):last-child) th:nth-child(2),
+.markdown-body .md-table-wrap table:has(thead th:nth-child(3):last-child) td:nth-child(2) {
+  text-align: center;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.markdown-body .md-table-wrap table:has(thead th:nth-child(3):last-child) td:last-child {
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--fgColor-muted);
+  line-height: 1.7;
+  text-align: left;
+}
+
+.markdown-body .md-table-wrap td > :last-child,
+.markdown-body .md-table-wrap th > :last-child {
+  margin-bottom: 0;
+}
+
+.dark .markdown-body .md-table-wrap thead {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--bgColor-muted) 70%, var(--bgColor-default)) 0%,
+    color-mix(in oklch, var(--bgColor-muted) 90%, transparent) 100%
+  );
+}
+
+/* 覆盖 github-markdown 默认的 block/max-content 布局、单元格边框与斑马纹 */
+.markdown-body .md-table-wrap table th,
+.markdown-body .md-table-wrap table td {
+  border: 0;
+}
+
+.markdown-body .md-table-wrap table tr:nth-child(2n) {
+  background-color: transparent;
 }

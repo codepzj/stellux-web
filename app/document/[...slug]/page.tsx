@@ -150,12 +150,12 @@ export default async function DocPage({ params }: DocPageProps) {
         doctree={treeItems}
         className="hidden md:block fixed top-0 left-0"
       />
-      <SidebarInset>
-        <div className="mx-auto mb-20 mt-8 w-full max-w-3xl px-4">
+      <SidebarInset className="min-h-svh">
+        <div className="mx-auto mb-20 mt-8 flex w-full max-w-3xl flex-1 flex-col px-4">
           <h1 className="mb-8 py-4 font-serif text-3xl font-bold tracking-tight text-balance text-foreground">
             {isRoot ? document?.title || '' : documentContent?.title || ''}
           </h1>
-          <div className="flex-1">
+          <div className="min-h-0 flex-1">
             {isRoot ? (
               <div className="mt-4">
                 <div className="text-lg font-bold">👋  欢迎来到知识库</div>
@@ -171,7 +171,7 @@ export default async function DocPage({ params }: DocPageProps) {
           </div>
 
           {!isRoot && (prevPage || nextPage) && (
-            <div className="mt-28">
+            <div className="mt-auto pt-12">
               <div
                 className={[
                   'grid grid-cols-1 gap-4 sm:grid-cols-2',

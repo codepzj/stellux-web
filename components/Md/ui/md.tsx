@@ -118,19 +118,24 @@ export default function Md({ content, className }: { content: string; className?
               </p>
             ),
             ul: ({ children }) => (
-              <ul className="my-6 list-inside list-disc space-y-2 pl-0! text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
+              <ul className="my-6 list-disc space-y-2 pl-6 text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="my-6 list-inside list-decimal space-y-2 pl-0! text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
+              <ol className="my-6 list-decimal space-y-2 pl-6 text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">
                 {children}
               </ol>
             ),
             li: ({ children }) => (
-              <li className="text-[15px] leading-[1.85] text-foreground/90 md:text-base [&>p]:my-2">
+              <li className="text-[15px] leading-[1.85] text-foreground/90 md:text-base [&>p:first-child]:inline [&>p:not(:first-child)]:mt-2 [&>p]:my-0">
                 {children}
               </li>
+            ),
+            table: ({ children }) => (
+              <div className="md-table-wrap w-full">
+                <table className="w-full table-fixed border-collapse">{children}</table>
+              </div>
             ),
             img: ({ src, alt }) => (
               <PhotoView src={src as string} key={photoIndex++}>
