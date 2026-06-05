@@ -134,6 +134,11 @@
     textarea {
       font-size: 16px !important;
     }
+
+    .comment-form-control::placeholder {
+      font-size: 0.6875rem !important;
+      line-height: 1.35 !important;
+    }
   }
 }
 

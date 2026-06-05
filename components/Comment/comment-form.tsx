@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCommentAvatarUrl, getCommentDeviceId } from '@/lib/comment-client'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { CommentVO, CreateCommentDTO } from '@/types/comment'
 import { CommentMarkdown } from './comment-markdown'
 
@@ -34,6 +35,15 @@ export function CommentForm({
   const [error, setError] = useState('')
   const contentRef = useRef<HTMLTextAreaElement>(null)
   const avatarUrl = getCommentAvatarUrl(email)
+  const isMobile = useIsMobile()
+
+  const contentPlaceholder = replyTarget
+    ? isMobile
+      ? '写下回复，支持 Markdown'
+      : '写下你的回复，支持 Markdown。'
+    : isMobile
+      ? '提问或反馈，支持 Markdown'
+      : '评论体验区。提问和反馈都可以写在这里，支持 Markdown。'
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -117,7 +127,7 @@ export function CommentForm({
                 autoComplete="name"
                 disabled={submitting}
                 required
-                className="h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
+                className="comment-form-control h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
               />
             </div>
 
@@ -140,7 +150,7 @@ export function CommentForm({
                 spellCheck={false}
                 disabled={submitting}
                 required
-                className="h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
+                className="comment-form-control h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
               />
             </div>
 
@@ -162,7 +172,7 @@ export function CommentForm({
                 inputMode="url"
                 spellCheck={false}
                 disabled={submitting}
-                className="h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
+                className="comment-form-control h-full rounded-none border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0"
               />
             </div>
           </div>
@@ -188,14 +198,10 @@ export function CommentForm({
                 name="comment"
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
-                placeholder={
-                  replyTarget
-                    ? '写下你的回复，支持 Markdown。'
-                    : '评论体验区。提问和反馈都可以写在这里，支持 Markdown。'
-                }
+                placeholder={contentPlaceholder}
                 disabled={submitting}
                 required
-                className="block h-[5.5rem] w-full resize-none border-0 bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-xs placeholder:leading-5 placeholder:text-muted-foreground/70 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:placeholder:text-sm sm:placeholder:leading-6"
+                className="comment-form-control block h-[5.5rem] w-full resize-none border-0 bg-transparent px-3 py-2 text-sm leading-6 outline-none placeholder:text-muted-foreground/70 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:placeholder:text-sm md:placeholder:leading-6"
               />
             )}
           </div>
