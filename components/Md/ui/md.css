@@ -132,13 +132,21 @@
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
+  min-width: 0;
+  max-width: 100%;
   color: var(--fgColor-default);
   background-color: transparent; /* 让全局背景透出 */
   font-size: 1rem; /* 16px：正文略收紧，减轻偏大感 */
   line-height: 1.875; /* 与略小字号搭配，仍保持可读行距 */
   word-wrap: break-word;
+  overflow-wrap: break-word;
   font-feature-settings: 'kern' 1;
   text-rendering: optimizeLegibility;
+}
+
+.markdown-body > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* 行长：正文与列表；标题单独由 .markdown-heading 约束并居中 */
@@ -244,6 +252,60 @@
 
 .markdown-body pre code {
   font-family: inherit;
+}
+
+.markdown-body :where(pre, code) {
+  max-width: 100%;
+}
+
+.markdown-body .md-code-frame {
+  --md-code-inline-gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  box-sizing: border-box;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  margin: 1.75em var(--md-code-inline-gap) 2em 0;
+  overflow: hidden;
+  border: 1px solid var(--borderColor-muted);
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--bgColor-muted) 70%, transparent);
+  padding: 0.125rem;
+  font-size: 0.875rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  line-height: 1.7;
+}
+
+.markdown-body .md-code-frame > .not-prose {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+}
+
+.markdown-body .md-code-scroll {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
+  white-space: pre;
+  border-radius: calc(0.75rem - 2px);
+  background: color-mix(in oklch, var(--bgColor-muted) 50%, transparent);
+  padding: 1rem 3.5rem 1rem 1rem;
+}
+
+@media (max-width: 767px) {
+  .markdown-body .md-code-frame {
+    --md-code-inline-gap: 0.75rem;
+  }
 }
 
 /* 技术文档里常见的 <kbd> 标签：暗黑下提高对比，避免灰字糊在黑底上 */

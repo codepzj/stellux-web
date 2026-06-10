@@ -81,7 +81,7 @@ export default function Md({ content, className }: { content: string; className?
     <PhotoProvider>
       <article
         className={cn(
-          'markdown-body overflow-x-auto overflow-y-hidden pb-12 font-sans text-pretty text-foreground antialiased md:pb-16 lg:pb-20',
+          'markdown-body min-w-0 max-w-full overflow-x-hidden pb-12 font-sans text-pretty text-foreground antialiased md:pb-16 lg:pb-20',
           className
         )}
       >
@@ -157,9 +157,9 @@ export default function Md({ content, className }: { content: string; className?
               </a>
             ),
             pre: ({ children }) => (
-              <pre className="my-8 overflow-x-auto rounded-xl border border-border/70 bg-muted/40 p-0.5! font-mono text-sm leading-relaxed">
+              <div className="md-code-frame">
                 {children}
-              </pre>
+              </div>
             ),
             code: ({ className, children }) => {
               const match = /language-(\w+)/.exec(className || '')
@@ -182,13 +182,13 @@ export default function Md({ content, className }: { content: string; className?
               if (match?.length || count > 0) {
                 const id = Math.random().toString(36).slice(2, 11)
                 return (
-                  <div className="not-prose relative rounded-md text-sm">
+                  <div className="not-prose relative min-w-0 max-w-full rounded-md text-sm">
+                    <CopyButton className="absolute top-1.5 right-1.5 z-10" copyId={id} />
                     <div
-                      className="overflow-x-auto rounded-b-[calc(var(--radius-xl)-2px)] bg-muted/50 p-4"
+                      className="md-code-scroll"
                       id={id}
                       suppressHydrationWarning
                     >
-                      <CopyButton className="absolute top-1.5 right-1.5" copyId={id} />
                       {children}
                     </div>
                   </div>
