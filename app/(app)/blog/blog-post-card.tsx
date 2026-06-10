@@ -19,12 +19,7 @@ export function BlogPostCard({
   thumbnailPriority?: boolean
 }) {
   return (
-    <Card
-      className={cn(
-        'border-0 shadow-none max-sm:p-3.5',
-        contentListCardClassName
-      )}
-    >
+    <Card className={cn('border-0 shadow-none max-sm:p-3.5', contentListCardClassName)}>
       <Link
         href={`/blog/${post.alias}`}
         scroll
@@ -35,20 +30,20 @@ export function BlogPostCard({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-5">
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-2.5 sm:gap-3">
             <div className="min-w-0">
-              {post.is_top ? (
-                <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
-                  <Badge
-                    variant="secondary"
-                    className="border-primary/20 bg-primary/8 text-primary dark:bg-primary/15"
-                  >
-                    <Pin className="size-3" aria-hidden />
-                    置顶
-                  </Badge>
-                </div>
-              ) : null}
-              <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground group-hover:text-primary sm:text-lg md:text-xl">
-                {post.title}
-              </h2>
+              <div className="min-w-0">
+                <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug tracking-tight text-foreground group-hover:text-primary sm:text-lg md:text-xl">
+                  {post.title}
+                  {post.is_top ? (
+                    <Badge
+                      variant="secondary"
+                      className="ml-1.5 inline-flex translate-y-[-0.08em] border-primary/20 bg-primary/8 align-middle text-primary dark:bg-primary/15"
+                    >
+                      <Pin aria-hidden />
+                      置顶
+                    </Badge>
+                  ) : null}
+                </h2>
+              </div>
               {post.description ? (
                 <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:mt-2 sm:line-clamp-2 md:line-clamp-1">
                   {post.description}
@@ -109,9 +104,7 @@ export function BlogPostCard({
                   fill
                   sizes="160px"
                   className="object-cover transition-transform duration-300 motion-safe:group-hover:scale-[1.04]"
-                  {...(thumbnailPriority
-                    ? { priority: true }
-                    : { loading: 'lazy' as const })}
+                  {...(thumbnailPriority ? { priority: true } : { loading: 'lazy' as const })}
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-muted/80 to-muted/40">

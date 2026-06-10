@@ -6,10 +6,14 @@ import { toast } from 'sonner'
 import { getUserInfoAPI, userLoginAPI, type AdminClient } from '@/lib/admin/api'
 import { ADMIN_DEFAULT_PATH, ADMIN_LOGIN_PATH } from '@/lib/admin/routes'
 import { adminRequest, isAdminAuthError } from '@/lib/admin/request'
-import type { Response } from '@/types/admin/dto'
 import type { LoginReq, UserInfoVO } from '@/types/admin/user'
 
 const ADMIN_TOKEN_KEY = 'stellux-admin-token'
+
+function readStoredToken() {
+  if (typeof window === 'undefined') return null
+  return window.localStorage.getItem(ADMIN_TOKEN_KEY)
+}
 
 interface AdminAuthContextValue {
   token: string | null
@@ -34,7 +38,7 @@ export function useAdminAuth() {
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [token, setToken] = React.useState<string | null>(null)
+  const [token, setToken] = React.useState<string | null>(() => readStoredToken())
   const [user, setUser] = React.useState<UserInfoVO | null>(null)
   const [isReady, setIsReady] = React.useState(false)
 
@@ -81,10 +85,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = React.useCallback(
     async (data: LoginReq) => {
-      const loginResponse = await userLoginAPI(
-        (path, options) => adminRequest(path, options),
-        data
-      )
+      const loginResponse = await userLoginAPI((path, options) => adminRequest(path, options), data)
 
       if (loginResponse.code !== 200) {
         throw new Error(loginResponse.error || loginResponse.msg || '登录失败')
@@ -108,7 +109,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   React.useEffect(() => {
-    setToken(localStorage.getItem(ADMIN_TOKEN_KEY))
+    setToken(readStoredToken())
     setIsReady(true)
   }, [])
 
@@ -125,13 +126,15 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (isReady && token && !user && pathname !== ADMIN_LOGIN_PATH) {
-      refreshUser().catch(error => {
-        clearAuth()
+      refreshUser().catch((error) => {
+        if (!readStoredToken()) {
+          router.replace(ADMIN_LOGIN_PATH)
+          return
+        }
         toast.error(error instanceof Error ? error.message : '获取用户信息失败')
-        router.replace(ADMIN_LOGIN_PATH)
       })
     }
-  }, [clearAuth, isReady, pathname, refreshUser, router, token, user])
+  }, [isReady, pathname, refreshUser, router, token, user])
 
   const value = React.useMemo(
     () => ({

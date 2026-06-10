@@ -193,10 +193,14 @@ export function PostListPage() {
                         }
                       />
                     </TableCell>
-                    <TableCell className="min-w-48">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-medium">{post.title}</span>
-                        {post.is_top && <Badge variant="secondary">置顶</Badge>}
+                    <TableCell className="min-w-48 max-w-80">
+                      <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
+                        <span className="min-w-0 truncate font-medium">{post.title}</span>
+                        {post.is_top && (
+                          <Badge variant="secondary" className="shrink-0">
+                            置顶
+                          </Badge>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="max-w-72 truncate text-muted-foreground">
