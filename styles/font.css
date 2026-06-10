@@ -1,13 +1,13 @@
-/* next/font 在 html 上注入 --font-sans-sc / --font-serif-sc / --font-mono-jb */
+/* 使用系统字体栈，避免构建阶段依赖远程字体下载。 */
 
 @theme {
   --font-sans:
-    var(--font-sans-sc), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    var(--font-sans-sc, "PingFang SC"), "Hiragino Sans GB", "Microsoft YaHei",
     "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-serif:
-    var(--font-serif-sc), "Source Han Serif SC", "Songti SC", "STSong", "SimSun",
+    var(--font-serif-sc, "Source Han Serif SC"), "Songti SC", "STSong", "SimSun",
     "Noto Serif SC", serif;
-  --font-mono: var(--font-mono-jb), ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas,
+  --font-mono: var(--font-mono-jb, ui-monospace), "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
 }
 
@@ -19,13 +19,12 @@
   html {
     --font-sans:
       "PingFang SC", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei",
-      "Microsoft YaHei UI", "Segoe UI Variable", "Segoe UI", var(--font-sans-sc), system-ui,
-      sans-serif;
+      "Microsoft YaHei UI", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
     --font-serif:
       "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun",
-      "Noto Serif SC", var(--font-serif-sc), serif;
+      "Noto Serif SC", serif;
     --font-mono:
       ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SF Mono", Menlo, Monaco, Consolas,
-      var(--font-mono-jb), monospace;
+      monospace;
   }
 }

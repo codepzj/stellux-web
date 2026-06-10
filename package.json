@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "test": "tsx --test tests/**/*.test.ts",
     "lint": "pnpm format",
     "format": "prettier --write ."
   },
@@ -37,6 +38,7 @@
     "next": "16.2.6",
     "next-themes": "0.4.6",
     "postcss": "^8.5.15",
+    "radix-ui": "^1.5.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-github-calendar": "^5.0.6",
@@ -63,6 +65,7 @@
     "@types/rss": "^0.0.32",
     "baseline-browser-mapping": "^2.10.31",
     "prettier": "3.8.3",
+    "tsx": "^4.22.4",
     "typescript": "6.0.3"
   }
 }

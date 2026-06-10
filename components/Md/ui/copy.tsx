@@ -106,14 +106,14 @@ const CopyButton = ({ copyId, className }: { copyId: string; className?: string 
     <Button
       onClick={onCopy}
       aria-label="Copy"
-      size="icon"
+      size="icon-sm"
       variant="ghost"
-      className={cn('w-8 h-8 p-0 rounded-md', className)}
+      className={cn('rounded-md bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground', className)}
     >
       {copied ? (
-        <Check className="transition-transform duration-300" size={16} />
+        <Check data-icon="icon" className="transition-transform duration-300" />
       ) : (
-        <Clipboard className="transition-transform duration-300" size={16} />
+        <Clipboard data-icon="icon" className="transition-transform duration-300" />
       )}
     </Button>
   )

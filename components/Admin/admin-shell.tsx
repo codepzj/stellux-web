@@ -1,0 +1,169 @@
+'use client'
+
+import * as React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LogOutIcon, MenuIcon, UserRoundPenIcon } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+import { adminNavItems, buildAdminBreadcrumbs } from '@/lib/admin/routes'
+import { useAdminAuth } from './auth-provider'
+
+export function AdminShell({ children }: { children: React.ReactNode }) {
+  const { isReady, token, user, logout } = useAdminAuth()
+  const pathname = usePathname()
+  const breadcrumbs = buildAdminBreadcrumbs(pathname)
+
+  if (!isReady || !token) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex w-80 flex-col gap-3">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarHeader>
+          <Link
+            href="/admin/post/create"
+            className="flex h-12 w-full items-center px-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+          >
+            <img
+              src="/admin/logo-light.png"
+              alt="Stellux"
+              className="h-auto w-32 object-contain group-data-[collapsible=icon]:hidden"
+            />
+            <img
+              src="/admin/logo-sm-light.png"
+              alt="Stellux"
+              className="hidden size-8 object-contain group-data-[collapsible=icon]:block"
+            />
+          </Link>
+        </SidebarHeader>
+        <SidebarContent>
+          {adminNavItems.map(item => (
+            <SidebarGroup key={item.href}>
+              <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {(item.children?.filter(child => !child.hidden && !child.sidebarHidden) ?? [item]).map(child => {
+                    const href = child.href === '/admin/post/list' ? `${child.href}?type=publish` : child.href
+                    const active = pathname === child.href || pathname.startsWith(`${child.href}/`)
+                    const Icon = child.icon ?? item.icon
+                    return (
+                      <SidebarMenuItem key={child.href}>
+                        <SidebarMenuButton asChild isActive={active} tooltip={child.title}>
+                          <Link href={href}>
+                            {Icon && <Icon data-icon="inline-start" />}
+                            <span>{child.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <header className="sticky top-0 flex h-14 shrink-0 items-center justify-between border-b bg-background/95 px-4 backdrop-blur">
+          <div className="flex min-w-0 items-center gap-2">
+            <SidebarTrigger aria-label="切换侧边栏" />
+            <Button variant="ghost" size="icon-sm" className="md:hidden" aria-label="菜单">
+              <MenuIcon />
+            </Button>
+            <Breadcrumb className="min-w-0">
+              <BreadcrumbList>
+                {breadcrumbs.map((item, index) => {
+                  const isLast = index === breadcrumbs.length - 1
+                  return (
+                    <React.Fragment key={`${item.href}-${item.title}`}>
+                      <BreadcrumbItem className={cn(index < breadcrumbs.length - 1 && 'hidden md:block')}>
+                        {isLast ? (
+                          <BreadcrumbPage className="truncate">{item.title}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink asChild>
+                            <Link href={item.href}>{item.title}</Link>
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+                    </React.Fragment>
+                  )
+                })}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-9 gap-2 px-2">
+                <Avatar className="size-7">
+                  <AvatarImage src={user?.avatar} alt={user?.username} />
+                  <AvatarFallback>{user?.nickname?.slice(0, 1) || 'U'}</AvatarFallback>
+                </Avatar>
+                <span className="hidden max-w-28 truncate text-sm md:inline">
+                  {user?.nickname || user?.username || '管理员'}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link href="/admin/user/edit/basic">
+                    <UserRoundPenIcon data-icon="inline-start" />
+                    编辑资料
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>
+                  <LogOutIcon data-icon="inline-start" />
+                  退出登录
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </header>
+        <main className="min-h-[calc(100svh-3.5rem)] overflow-x-hidden bg-muted/20 p-4 md:p-6">
+          <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
