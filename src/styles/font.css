@@ -1,0 +1,29 @@
+/* 使用系统字体栈，避免构建阶段依赖远程字体下载。 */
+
+@theme {
+  --font-sans:
+    var(--font-sans-sc, 'PingFang SC'), 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  --font-serif:
+    var(--font-serif-sc, 'Source Han Serif SC'), 'Songti SC', 'STSong', 'SimSun', 'Noto Serif SC',
+    serif;
+  --font-mono:
+    var(--font-mono-jb, ui-monospace), 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+}
+
+/*
+ * 低 DPI（约 1x）：系统中文 hint 通常优于远程 Noto，优先系统栈；
+ * Retina / 高分屏仍走上面 @theme，保留 Noto 观感。
+ */
+@media (-webkit-max-device-pixel-ratio: 1.25), (max-resolution: 1.299dppx) {
+  html {
+    --font-sans:
+      'PingFang SC', 'Hiragino Sans GB', 'Hiragino Sans GB W3', 'Microsoft YaHei',
+      'Microsoft YaHei UI', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+    --font-serif:
+      'Source Han Serif SC', 'Noto Serif CJK SC', 'Songti SC', 'STSong', 'SimSun', 'Noto Serif SC',
+      serif;
+    --font-mono:
+      ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+}

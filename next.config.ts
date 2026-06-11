@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     turbopackFileSystemCacheForDev: true, // 开发环境文件系统缓存，提高开发效率
+    optimizePackageImports: ['lucide-react'],
   },
   reactCompiler: true, // 启用 React 编译器，提高开发效率
 }
