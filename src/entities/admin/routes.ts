@@ -5,6 +5,7 @@ import {
   ClipboardPenIcon,
   FilePlusIcon,
   ListIcon,
+  MessageSquareTextIcon,
   TagsIcon,
   UserIcon,
   UserRoundPenIcon,
@@ -51,6 +52,11 @@ export const adminNavItems: AdminNavItem[] = [
     title: '友链',
     href: '/admin/friend',
     icon: UsersRoundIcon,
+  },
+  {
+    title: '评论',
+    href: '/admin/comment',
+    icon: MessageSquareTextIcon,
   },
   {
     title: '用户',

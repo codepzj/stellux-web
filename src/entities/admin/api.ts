@@ -9,6 +9,12 @@ import type {
   DocumentTreeVO,
 } from '@/entities/admin/types/document'
 import type {
+  CommentCreateReq,
+  CommentListReq,
+  CommentUpdateReq,
+  CommentVO,
+} from '@/entities/admin/types/comment'
+import type {
   FriendCreateReq,
   FriendListReq,
   FriendUpdateReq,
@@ -131,6 +137,24 @@ export const updateFriendAPI = (client: AdminClient, data: FriendUpdateReq) =>
 
 export const deleteFriendAPI = (client: AdminClient, id: string) =>
   client<null>(`/admin/friend/delete/${id}`, { method: 'DELETE' })
+
+export const getCommentListAdminAPI = (client: AdminClient, params: CommentListReq) =>
+  client<PageResponse<CommentVO>['data']>('/admin/comment/list', { params })
+
+export const getCommentAdminAPI = (client: AdminClient, id: string) =>
+  client<CommentVO>(`/admin/comment/${id}`)
+
+export const createCommentAdminAPI = (client: AdminClient, data: CommentCreateReq) =>
+  client<CommentVO>('/comment/create', {
+    method: 'POST',
+    body: { ...data, device_id: 'admin' },
+  })
+
+export const updateCommentAPI = (client: AdminClient, data: CommentUpdateReq) =>
+  client<null>('/admin/comment/update', { method: 'PUT', body: data })
+
+export const deleteCommentAPI = (client: AdminClient, id: string) =>
+  client<null>(`/admin/comment/delete/${id}`, { method: 'DELETE' })
 
 export const createRootDocumentAPI = (client: AdminClient, data: DocumentRootRequest) =>
   client<null>('/admin/document/create', { method: 'POST', body: data })
