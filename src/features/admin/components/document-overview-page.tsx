@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { BookOpenIcon, MoreHorizontalIcon } from 'lucide-react'
+import { BookOpenIcon, GripVerticalIcon, MoreHorizontalIcon, SparklesIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { AdminEmptyState } from '@/features/admin/components/admin-empty-state'
 import { AdminTableLoadingRow } from '@/features/admin/components/admin-loading-state'
@@ -39,6 +39,8 @@ import { Input } from '@/shared/ui/input'
 import { Switch } from '@/shared/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { Textarea } from '@/shared/ui/textarea'
+import { createAliasFromTitle } from '@/shared/lib/slug'
+import { cn } from '@/shared/lib/utils'
 import {
   createRootDocumentAPI,
   deleteRootDocumentAPI,
@@ -77,6 +79,8 @@ export function DocumentOverviewPage() {
     doc: DocumentRootVO
     mode: 'soft' | 'hard'
   } | null>(null)
+  const [draggingId, setDraggingId] = React.useState<string | null>(null)
+  const [dropTargetId, setDropTargetId] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(true)
   const isEdit = 'id' in form
 
@@ -150,6 +154,48 @@ export function DocumentOverviewPage() {
     }
   }
 
+  const reorderDocuments = async (sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return
+
+    const sourceIndex = documents.findIndex((doc) => doc.id === sourceId)
+    const targetIndex = documents.findIndex((doc) => doc.id === targetId)
+    if (sourceIndex < 0 || targetIndex < 0) return
+
+    const previousDocuments = documents
+    const nextDocuments = [...documents]
+    const [movingDocument] = nextDocuments.splice(sourceIndex, 1)
+    nextDocuments.splice(targetIndex, 0, movingDocument)
+
+    const normalizedDocuments = nextDocuments.map((doc, index) => ({ ...doc, sort: index + 1 }))
+    setDocuments(normalizedDocuments)
+
+    try {
+      await Promise.all(
+        normalizedDocuments
+          .filter(
+            (doc, index) =>
+              previousDocuments[index]?.id !== doc.id || previousDocuments[index]?.sort !== doc.sort
+          )
+          .map((doc) =>
+            updateRootDocumentAPI(request, {
+              id: doc.id,
+              title: doc.title,
+              alias: doc.alias,
+              description: doc.description,
+              thumbnail: doc.thumbnail,
+              document_type: 'document',
+              is_public: doc.is_public,
+              sort: doc.sort,
+            })
+          )
+      )
+      toast.success('排序已保存')
+    } catch (error) {
+      setDocuments(previousDocuments)
+      toast.error(error instanceof Error ? error.message : '排序保存失败')
+    }
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -194,16 +240,54 @@ export function DocumentOverviewPage() {
                 <AdminTableLoadingRow colSpan={5} className="min-h-[360px]" />
               ) : documents.length ? (
                 documents.map((doc) => (
-                  <TableRow key={doc.id}>
+                  <TableRow
+                    key={doc.id}
+                    draggable
+                    onDragStart={(event) => {
+                      event.dataTransfer.effectAllowed = 'move'
+                      event.dataTransfer.setData('text/plain', doc.id)
+                      setDraggingId(doc.id)
+                    }}
+                    onDragOver={(event) => {
+                      event.preventDefault()
+                      event.dataTransfer.dropEffect = 'move'
+                      setDropTargetId(doc.id)
+                    }}
+                    onDragLeave={() =>
+                      setDropTargetId((current) => (current === doc.id ? null : current))
+                    }
+                    onDrop={async (event) => {
+                      event.preventDefault()
+                      const sourceId = event.dataTransfer.getData('text/plain') || draggingId
+                      setDraggingId(null)
+                      setDropTargetId(null)
+                      if (sourceId) await reorderDocuments(sourceId, doc.id)
+                    }}
+                    onDragEnd={() => {
+                      setDraggingId(null)
+                      setDropTargetId(null)
+                    }}
+                    className={cn(
+                      'cursor-grab active:cursor-grabbing',
+                      draggingId === doc.id && 'opacity-50',
+                      dropTargetId === doc.id && draggingId !== doc.id && 'bg-muted/70'
+                    )}
+                  >
                     <TableCell className="min-w-56">
-                      <div className="flex min-w-0 flex-col gap-1">
-                        <Link
-                          href={`/admin/document/content/${doc.id}`}
-                          className="font-medium hover:underline"
-                        >
-                          {doc.title}
-                        </Link>
-                        <span className="text-sm text-muted-foreground">{doc.alias}</span>
+                      <div className="flex min-w-0 items-center gap-2">
+                        <GripVerticalIcon
+                          className="size-4 shrink-0 text-muted-foreground"
+                          aria-hidden
+                        />
+                        <div className="flex min-w-0 flex-col gap-1">
+                          <Link
+                            href={`/admin/document/content/${doc.id}`}
+                            className="font-medium hover:underline"
+                          >
+                            {doc.title}
+                          </Link>
+                          <span className="text-sm text-muted-foreground">{doc.alias}</span>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="max-w-xl truncate text-muted-foreground">
@@ -281,8 +365,10 @@ export function DocumentOverviewPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction asChild>
+            <AlertDialogCancel variant="outline" size="default">
+              取消
+            </AlertDialogCancel>
+            <AlertDialogAction variant="default" size="default" asChild>
               <Button
                 variant={removeTarget?.mode === 'hard' ? 'destructive' : 'default'}
                 onClick={removeDocument}
@@ -304,16 +390,40 @@ function DocumentRootForm({
   form: DocumentRootRequest | DocumentRootEditRequest
   updateForm: <K extends keyof DocumentRootRequest>(key: K, value: DocumentRootRequest[K]) => void
 }) {
+  const generatedAlias = createAliasFromTitle(form.title)
+
+  const updateTitle = (title: string) => {
+    const shouldSyncAlias = !form.alias || form.alias === createAliasFromTitle(form.title)
+    updateForm('title', title)
+    if (shouldSyncAlias) {
+      updateForm('alias', createAliasFromTitle(title))
+    }
+  }
+
   return (
     <FieldGroup>
       <div className="grid gap-4 md:grid-cols-2">
         <Field>
           <FieldLabel>标题</FieldLabel>
-          <Input value={form.title} onChange={(event) => updateForm('title', event.target.value)} />
+          <Input value={form.title} onChange={(event) => updateTitle(event.target.value)} />
         </Field>
         <Field>
           <FieldLabel>别名</FieldLabel>
-          <Input value={form.alias} onChange={(event) => updateForm('alias', event.target.value)} />
+          <div className="flex gap-2">
+            <Input
+              value={form.alias}
+              onChange={(event) => updateForm('alias', event.target.value)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!generatedAlias}
+              onClick={() => updateForm('alias', generatedAlias)}
+            >
+              <SparklesIcon data-icon="inline-start" />
+              生成
+            </Button>
+          </div>
         </Field>
       </div>
       <Field>

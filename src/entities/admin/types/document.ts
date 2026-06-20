@@ -56,6 +56,8 @@ export interface DocumentTreeVO {
   created_at: string
   updated_at: string
   title: string
+  content: string
+  description: string
   alias: string
   document_type?: string
   is_dir: boolean

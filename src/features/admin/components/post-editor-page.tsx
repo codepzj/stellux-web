@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ChevronDownIcon, SaveIcon, SettingsIcon } from 'lucide-react'
+import { ChevronDownIcon, SaveIcon, SettingsIcon, SparklesIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { AdminMarkdownEditor } from '@/features/admin/components/markdown-editor'
 import { useAdminAuth } from '@/features/admin/components/auth-provider'
@@ -37,6 +37,7 @@ import {
   queryLabelListAPI,
   updatePostAPI,
 } from '@/entities/admin/api'
+import { createAliasFromTitle } from '@/shared/lib/slug'
 import { cn } from '@/shared/lib/utils'
 import type { LabelVO } from '@/entities/admin/types/label'
 import type { PostReq } from '@/entities/admin/types/post'
@@ -75,11 +76,21 @@ export function PostEditorPage({ mode }: { mode: 'create' | 'edit' }) {
   const selectedTagText = selectedTags.length
     ? selectedTags.map((tag) => tag.name).join('、')
     : '请选择标签'
+  const generatedAlias = createAliasFromTitle(postForm.title)
   const submitText =
     mode === 'create' ? (pending ? '发布中...' : '发布') : pending ? '保存中...' : '保存'
 
   const updateForm = <K extends keyof PostReq>(key: K, value: PostReq[K]) => {
     setPostForm((current) => ({ ...current, [key]: value }))
+  }
+
+  const updateTitle = (title: string) => {
+    const shouldSyncAlias =
+      !postForm.alias || postForm.alias === createAliasFromTitle(postForm.title)
+    updateForm('title', title)
+    if (shouldSyncAlias) {
+      updateForm('alias', createAliasFromTitle(title))
+    }
   }
 
   React.useEffect(() => {
@@ -181,16 +192,27 @@ export function PostEditorPage({ mode }: { mode: 'create' | 'edit' }) {
                     id="post-title"
                     value={postForm.title}
                     maxLength={50}
-                    onChange={(event) => updateForm('title', event.target.value)}
+                    onChange={(event) => updateTitle(event.target.value)}
                   />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="post-alias">别名</FieldLabel>
-                  <Input
-                    id="post-alias"
-                    value={postForm.alias}
-                    onChange={(event) => updateForm('alias', event.target.value)}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="post-alias"
+                      value={postForm.alias}
+                      onChange={(event) => updateForm('alias', event.target.value)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={!generatedAlias}
+                      onClick={() => updateForm('alias', generatedAlias)}
+                    >
+                      <SparklesIcon data-icon="inline-start" />
+                      生成
+                    </Button>
+                  </div>
                 </Field>
               </div>
               <div className="grid gap-4 md:grid-cols-2">

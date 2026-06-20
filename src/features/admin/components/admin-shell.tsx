@@ -3,7 +3,8 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOutIcon, MenuIcon, UserRoundPenIcon } from 'lucide-react'
+import { LogOutIcon, MenuIcon, MoonIcon, SunIcon, UserRoundPenIcon } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import {
   Breadcrumb,
@@ -36,6 +37,7 @@ import {
   SidebarTrigger,
 } from '@/shared/ui/sidebar'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
 import { cn } from '@/shared/lib/utils'
 import { adminNavItems, buildAdminBreadcrumbs } from '@/entities/admin/routes'
 import { useAdminAuth } from './auth-provider'
@@ -67,12 +69,22 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <img
               src="/admin/logo-light.png"
               alt="Stellux"
-              className="h-auto w-32 object-contain group-data-[collapsible=icon]:hidden"
+              className="h-auto w-32 object-contain group-data-[collapsible=icon]:!hidden dark:hidden"
+            />
+            <img
+              src="/admin/logo-dark.png"
+              alt="Stellux"
+              className="hidden h-auto w-32 object-contain group-data-[collapsible=icon]:!hidden dark:block"
             />
             <img
               src="/admin/logo-sm-light.png"
               alt="Stellux"
-              className="hidden size-8 object-contain group-data-[collapsible=icon]:block"
+              className="hidden size-8 object-contain group-data-[collapsible=icon]:block group-data-[collapsible=icon]:dark:hidden"
+            />
+            <img
+              src="/admin/logo-sm-dark.png"
+              alt="Stellux"
+              className="hidden size-8 object-contain group-data-[collapsible=icon]:dark:block"
             />
           </Link>
         </SidebarHeader>
@@ -139,38 +151,70 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-9 gap-2 px-2">
-                <Avatar className="size-7">
-                  <AvatarImage src={user?.avatar} alt={user?.username} />
-                  <AvatarFallback>{user?.nickname?.slice(0, 1) || 'U'}</AvatarFallback>
-                </Avatar>
-                <span className="hidden max-w-28 truncate text-sm md:inline">
-                  {user?.nickname || user?.username || '管理员'}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/user/edit/basic">
-                    <UserRoundPenIcon data-icon="inline-start" />
-                    编辑资料
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={logout}>
-                  <LogOutIcon data-icon="inline-start" />
-                  退出登录
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex shrink-0 items-center gap-1">
+            <AdminThemeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-9 gap-2 px-2">
+                  <Avatar className="size-7">
+                    <AvatarImage src={user?.avatar} alt={user?.username} />
+                    <AvatarFallback>{user?.nickname?.slice(0, 1) || 'U'}</AvatarFallback>
+                  </Avatar>
+                  <span className="hidden max-w-28 truncate text-sm md:inline">
+                    {user?.nickname || user?.username || '管理员'}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin/user/edit/basic">
+                      <UserRoundPenIcon data-icon="inline-start" />
+                      编辑资料
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOutIcon data-icon="inline-start" />
+                    退出登录
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
         <main className="min-h-[calc(100svh-3.5rem)] overflow-x-hidden bg-muted/20 p-4 md:p-6">
           <div className="flex w-full min-w-0 flex-col gap-4">{children}</div>
         </main>
       </SidebarInset>
     </SidebarProvider>
+  )
+}
+
+function AdminThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isDark = mounted && resolvedTheme === 'dark'
+  const label = isDark ? '切换浅色模式' : '切换深色模式'
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={label}
+          className={cn(!mounted && 'pointer-events-none opacity-60')}
+          onClick={() => setTheme(isDark ? 'light' : 'dark')}
+        >
+          {isDark ? <SunIcon /> : <MoonIcon />}
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   )
 }

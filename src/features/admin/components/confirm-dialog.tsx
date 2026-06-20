@@ -40,8 +40,10 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
-          <AlertDialogAction asChild>
+          <AlertDialogCancel variant="outline" size="default">
+            取消
+          </AlertDialogCancel>
+          <AlertDialogAction variant="default" size="default" asChild>
             <Button variant="destructive" onClick={() => void onConfirm()}>
               确定
             </Button>

@@ -188,7 +188,16 @@ export function PostListPage() {
                     </TableCell>
                     <TableCell className="min-w-48 max-w-80">
                       <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
-                        <span className="min-w-0 truncate font-medium">{post.title}</span>
+                        {type !== 'bin' ? (
+                          <Link
+                            href={`/admin/post/edit/${post.id}`}
+                            className="block min-w-0 max-w-full truncate font-medium hover:underline"
+                          >
+                            {post.title}
+                          </Link>
+                        ) : (
+                          <span className="min-w-0 truncate font-medium">{post.title}</span>
+                        )}
                         {post.is_top && (
                           <Badge variant="secondary" className="shrink-0">
                             置顶

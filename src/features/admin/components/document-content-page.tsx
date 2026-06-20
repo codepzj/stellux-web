@@ -2,7 +2,14 @@
 
 import * as React from 'react'
 import { useParams } from 'next/navigation'
-import { FileIcon, FolderIcon, PlusIcon, SaveIcon } from 'lucide-react'
+import {
+  FileIcon,
+  FolderIcon,
+  GripVerticalIcon,
+  PlusIcon,
+  SaveIcon,
+  SparklesIcon,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { AdminEmptyState } from '@/features/admin/components/admin-empty-state'
 import { AdminTreeLoadingState } from '@/features/admin/components/admin-loading-state'
@@ -31,6 +38,8 @@ import { Field, FieldGroup, FieldLabel } from '@/shared/ui/field'
 import { Input } from '@/shared/ui/input'
 import { ScrollArea } from '@/shared/ui/scroll-area'
 import { Textarea } from '@/shared/ui/textarea'
+import { createAliasFromTitle } from '@/shared/lib/slug'
+import { cn } from '@/shared/lib/utils'
 import {
   createDocumentContentAPI,
   getDocumentContentAPI,
@@ -52,6 +61,11 @@ import type {
 } from '@/entities/admin/types/document'
 
 type ContentForm = DocumentContentRequest & { id?: string }
+type TreeDropPosition = 'before' | 'after' | 'inside'
+type TreeDropTarget = {
+  id: string
+  position: TreeDropPosition
+} | null
 
 const emptyContent = (
   documentId: string,
@@ -69,6 +83,86 @@ const emptyContent = (
   sort,
 })
 
+function sortSiblings(rows: DocumentTreeVO[]) {
+  return [...rows].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, 'zh-CN'))
+}
+
+function getTreeDropPosition(event: React.DragEvent<HTMLElement>, node: AdminTreeNode) {
+  const rect = event.currentTarget.getBoundingClientRect()
+  const offset = event.clientY - rect.top
+  const topEdge = rect.height * 0.32
+  const bottomEdge = rect.height * 0.68
+
+  if (node.is_dir && offset >= topEdge && offset <= bottomEdge) {
+    return 'inside' satisfies TreeDropPosition
+  }
+  return offset < rect.height / 2 ? 'before' : 'after'
+}
+
+function getChangedTreeRows(previousRows: DocumentTreeVO[], nextRows: DocumentTreeVO[]) {
+  const previousMap = new Map(previousRows.map((row) => [row.id, row]))
+
+  return nextRows.filter((row) => {
+    const previous = previousMap.get(row.id)
+    return previous && (previous.parent_id !== row.parent_id || previous.sort !== row.sort)
+  })
+}
+
+function getReorderedTreeRows(
+  rows: DocumentTreeVO[],
+  sourceId: string,
+  targetId: string,
+  position: TreeDropPosition,
+  rootParentId: string
+) {
+  if (sourceId === targetId) return null
+
+  const source = rows.find((row) => row.id === sourceId)
+  const target = rows.find((row) => row.id === targetId)
+  if (!source || !target) return null
+
+  const descendantIds = new Set(getDescendantIds(rows, sourceId))
+  if (descendantIds.has(targetId)) return null
+  if (position === 'inside' && !target.is_dir) return null
+
+  const previousParentId = source.parent_id
+  const nextParentId = position === 'inside' ? target.id : target.parent_id || rootParentId
+  const nextRows = rows.map((row) =>
+    row.id === sourceId ? { ...row, parent_id: nextParentId } : { ...row }
+  )
+
+  const normalizeParent = (parentId: string, orderedRows?: DocumentTreeVO[]) => {
+    const siblings =
+      orderedRows ?? sortSiblings(nextRows.filter((row) => row.parent_id === parentId))
+    siblings.forEach((row, index) => {
+      const targetRow = nextRows.find((item) => item.id === row.id)
+      if (targetRow) {
+        targetRow.sort = index + 1
+      }
+    })
+  }
+
+  if (previousParentId !== nextParentId) {
+    normalizeParent(previousParentId)
+  }
+
+  const nextSiblings = sortSiblings(
+    nextRows.filter((row) => row.parent_id === nextParentId && row.id !== sourceId)
+  )
+  const insertIndex =
+    position === 'inside'
+      ? nextSiblings.length
+      : Math.max(
+          nextSiblings.findIndex((row) => row.id === targetId),
+          0
+        ) + (position === 'after' ? 1 : 0)
+
+  nextSiblings.splice(insertIndex, 0, nextRows.find((row) => row.id === sourceId)!)
+  normalizeParent(nextParentId, nextSiblings)
+
+  return nextRows
+}
+
 export function DocumentContentPage() {
   const { id } = useParams<{ id: string }>()
   const { request } = useAdminAuth()
@@ -78,6 +172,8 @@ export function DocumentContentPage() {
   const [formOpen, setFormOpen] = React.useState(false)
   const [form, setForm] = React.useState<ContentForm>(emptyContent(id))
   const [removeTarget, setRemoveTarget] = React.useState<AdminTreeNode | null>(null)
+  const [draggingNodeId, setDraggingNodeId] = React.useState<string | null>(null)
+  const [treeDropTarget, setTreeDropTarget] = React.useState<TreeDropTarget>(null)
   const [loadingTree, setLoadingTree] = React.useState(true)
   const tree = React.useMemo(() => buildDocumentTree(flatRows), [flatRows])
   const isEdit = Boolean(form.id)
@@ -186,6 +282,47 @@ export function DocumentContentPage() {
     }
   }
 
+  const reorderTree = async (sourceId: string, targetId: string, position: TreeDropPosition) => {
+    const nextRows = getReorderedTreeRows(flatRows, sourceId, targetId, position, id)
+    if (!nextRows) return
+
+    const changedRows = getChangedTreeRows(flatRows, nextRows)
+    if (!changedRows.length) return
+
+    const previousRows = flatRows
+    setFlatRows(nextRows)
+    setSelected((current) => {
+      if (!current) return current
+      const nextSelected = nextRows.find((row) => row.id === current.id)
+      return nextSelected
+        ? { ...current, parent_id: nextSelected.parent_id, sort: nextSelected.sort }
+        : current
+    })
+
+    try {
+      await Promise.all(
+        changedRows.map((row) =>
+          updateDocumentContentAPI(request, {
+            id: row.id,
+            document_id: row.document_id,
+            title: row.title,
+            content: row.content,
+            description: row.description,
+            alias: row.alias,
+            parent_id: row.parent_id,
+            is_dir: row.is_dir,
+            sort: row.sort,
+          })
+        )
+      )
+      toast.success('目录已保存')
+    } catch (error) {
+      setFlatRows(previousRows)
+      await loadTree()
+      toast.error(error instanceof Error ? error.message : '目录保存失败')
+    }
+  }
+
   return (
     <div className="grid h-[calc(100svh-6rem)] min-h-[640px] grid-rows-[minmax(220px,35svh)_minmax(0,1fr)] gap-4 lg:grid-cols-[320px_1fr] lg:grid-rows-1">
       <section className="flex min-h-0 flex-col rounded-md border bg-background">
@@ -226,6 +363,15 @@ export function DocumentContentPage() {
                     onCreate={openCreate}
                     onEdit={openEdit}
                     onRemoveRequest={setRemoveTarget}
+                    draggingId={draggingNodeId}
+                    dropTarget={treeDropTarget}
+                    onDragStart={setDraggingNodeId}
+                    onDragTargetChange={setTreeDropTarget}
+                    onDrop={reorderTree}
+                    onDragEnd={() => {
+                      setDraggingNodeId(null)
+                      setTreeDropTarget(null)
+                    }}
                   />
                 ))
               ) : (
@@ -301,8 +447,10 @@ export function DocumentContentPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction asChild>
+            <AlertDialogCancel variant="outline" size="default">
+              取消
+            </AlertDialogCancel>
+            <AlertDialogAction variant="default" size="default" asChild>
               <Button
                 variant="destructive"
                 onClick={async () => {
@@ -329,6 +477,12 @@ function TreeNode({
   onCreate,
   onEdit,
   onRemoveRequest,
+  draggingId,
+  dropTarget,
+  onDragStart,
+  onDragTargetChange,
+  onDrop,
+  onDragEnd,
 }: {
   node: AdminTreeNode
   level: number
@@ -337,19 +491,74 @@ function TreeNode({
   onCreate: (parentId: string, isDir: boolean) => void
   onEdit: (id: string) => void
   onRemoveRequest: (node: AdminTreeNode) => void
+  draggingId: string | null
+  dropTarget: TreeDropTarget
+  onDragStart: (id: string) => void
+  onDragTargetChange: (target: TreeDropTarget) => void
+  onDrop: (sourceId: string, targetId: string, position: TreeDropPosition) => Promise<void>
+  onDragEnd: () => void
 }) {
   const Icon = node.is_dir ? FolderIcon : FileIcon
+  const isDragging = draggingId === node.id
+  const activeDropPosition = dropTarget?.id === node.id ? dropTarget.position : null
+
   return (
     <div className="flex flex-col gap-1">
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <div className="group flex items-center gap-1" style={{ paddingLeft: level * 14 }}>
+          <div
+            draggable
+            onDragStart={(event) => {
+              event.stopPropagation()
+              event.dataTransfer.effectAllowed = 'move'
+              event.dataTransfer.setData('text/plain', node.id)
+              onDragStart(node.id)
+            }}
+            onDragOver={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              event.dataTransfer.dropEffect = 'move'
+              onDragTargetChange({ id: node.id, position: getTreeDropPosition(event, node) })
+            }}
+            onDragLeave={(event) => {
+              event.stopPropagation()
+              if (dropTarget?.id === node.id) {
+                onDragTargetChange(null)
+              }
+            }}
+            onDrop={async (event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              const sourceId = event.dataTransfer.getData('text/plain') || draggingId
+              const position = activeDropPosition ?? getTreeDropPosition(event, node)
+              onDragTargetChange(null)
+              if (sourceId) {
+                await onDrop(sourceId, node.id, position)
+              }
+              onDragEnd()
+            }}
+            onDragEnd={(event) => {
+              event.stopPropagation()
+              onDragEnd()
+            }}
+            className={cn(
+              'group relative flex items-center gap-1 rounded-md',
+              isDragging && 'opacity-45',
+              activeDropPosition === 'inside' && 'bg-muted/80 ring-1 ring-border',
+              activeDropPosition === 'before' &&
+                'before:absolute before:inset-x-1 before:top-0 before:h-0.5 before:rounded-full before:bg-primary',
+              activeDropPosition === 'after' &&
+                'after:absolute after:inset-x-1 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary'
+            )}
+            style={{ paddingLeft: level * 14 }}
+          >
             <Button
               variant={selectedId === node.id ? 'secondary' : 'ghost'}
-              className="min-w-0 flex-1 justify-start"
+              className="min-w-0 flex-1 cursor-grab justify-start active:cursor-grabbing"
               size="sm"
               onClick={() => onSelect(node.id)}
             >
+              <GripVerticalIcon className="text-muted-foreground" />
               <Icon data-icon="inline-start" />
               <span className="truncate">{node.title}</span>
             </Button>
@@ -385,6 +594,12 @@ function TreeNode({
           onCreate={onCreate}
           onEdit={onEdit}
           onRemoveRequest={onRemoveRequest}
+          draggingId={draggingId}
+          dropTarget={dropTarget}
+          onDragStart={onDragStart}
+          onDragTargetChange={onDragTargetChange}
+          onDrop={onDrop}
+          onDragEnd={onDragEnd}
         />
       ))}
     </div>
@@ -398,20 +613,42 @@ function ContentFormView({
   form: ContentForm
   updateForm: <K extends keyof ContentForm>(key: K, value: ContentForm[K]) => void
 }) {
+  const generatedAlias = createAliasFromTitle(form.title)
+
+  const updateTitle = (title: string) => {
+    const shouldSyncAlias =
+      !form.is_dir && (!form.alias || form.alias === createAliasFromTitle(form.title))
+    updateForm('title', title)
+    if (shouldSyncAlias) {
+      updateForm('alias', createAliasFromTitle(title))
+    }
+  }
+
   return (
     <FieldGroup>
       <div className="grid gap-4 md:grid-cols-2">
         <Field>
           <FieldLabel>标题</FieldLabel>
-          <Input value={form.title} onChange={(event) => updateForm('title', event.target.value)} />
+          <Input value={form.title} onChange={(event) => updateTitle(event.target.value)} />
         </Field>
         {!form.is_dir && (
           <Field>
             <FieldLabel>别名</FieldLabel>
-            <Input
-              value={form.alias}
-              onChange={(event) => updateForm('alias', event.target.value)}
-            />
+            <div className="flex gap-2">
+              <Input
+                value={form.alias}
+                onChange={(event) => updateForm('alias', event.target.value)}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!generatedAlias}
+                onClick={() => updateForm('alias', generatedAlias)}
+              >
+                <SparklesIcon data-icon="inline-start" />
+                生成
+              </Button>
+            </div>
           </Field>
         )}
       </div>
