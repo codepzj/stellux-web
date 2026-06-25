@@ -97,7 +97,7 @@ export default function Md({ content, className }: { content: string; className?
             h2: ({ node, children, ...props }) => (
               <h2
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-20 mt-12 font-serif text-balance text-2xl font-bold tracking-tight text-foreground md:text-3xl"
+                className="markdown-heading scroll-m-20 mt-12 font-serif text-balance text-2xl font-bold tracking-normal text-foreground md:text-3xl"
                 {...props}
               >
                 {children}
@@ -106,11 +106,35 @@ export default function Md({ content, className }: { content: string; className?
             h3: ({ node, children, ...props }) => (
               <h3
                 id={getHeaderId(node)}
-                className="markdown-heading scroll-m-20 mt-10 text-balance text-xl font-semibold tracking-tight text-foreground md:text-2xl"
+                className="markdown-heading scroll-m-20 mt-10 font-serif text-balance text-xl font-semibold tracking-normal text-foreground md:text-2xl"
                 {...props}
               >
                 {children}
               </h3>
+            ),
+            h4: ({ children, ...props }) => (
+              <h4
+                className="markdown-heading scroll-m-20 mt-8 font-serif text-balance text-lg font-semibold tracking-normal text-foreground md:text-xl"
+                {...props}
+              >
+                {children}
+              </h4>
+            ),
+            h5: ({ children, ...props }) => (
+              <h5
+                className="markdown-heading scroll-m-20 mt-7 font-serif text-balance text-base font-semibold tracking-normal text-foreground md:text-lg"
+                {...props}
+              >
+                {children}
+              </h5>
+            ),
+            h6: ({ children, ...props }) => (
+              <h6
+                className="markdown-heading scroll-m-20 mt-6 font-serif text-balance text-sm font-semibold tracking-normal text-foreground md:text-base"
+                {...props}
+              >
+                {children}
+              </h6>
             ),
             p: ({ children }) => (
               <p className="my-6 text-[15px] leading-[1.85] text-foreground/90 md:my-7 md:text-base">

@@ -225,7 +225,7 @@ export default async function DocPage({ params }: DocPageProps) {
             </div>
           )}
         </div>
-        {!isRoot && <FloatingToc content={markdownContent} className="bottom-28" />}
+        {!isRoot && <FloatingToc content={markdownContent} className="bottom-[8.75rem]" />}
         <SidebarToggle />
         <BackToTop />
       </SidebarInset>

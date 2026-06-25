@@ -5,6 +5,7 @@ import { Provider } from '@/features/blog/components/search-provider'
 import { BlogListSection } from '@/features/blog/components/blog-list-section'
 import { BLOG_PAGE_SIZE } from '@/shared/lib/blog-list'
 import { generatePageMetadata, getSEOConfig } from '@/shared/lib/seo'
+import { ScrollReset } from '@/shared/components/ScrollReset'
 
 type BlogSearchParams = {
   page?: string
@@ -65,6 +66,7 @@ export default async function BlogListPage({
 
   return (
     <Provider>
+      <ScrollReset />
       <BlogListSection
         posts={posts}
         pagination={pagination}

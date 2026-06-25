@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { FileText, FileQuestion, Loader2, Search } from 'lucide-react'
+import { FileText, FileQuestion, Loader2 } from 'lucide-react'
 import { useSearch } from '@/features/blog/components/search-provider'
 import {
   Command,
@@ -146,19 +146,8 @@ export function SearchModal() {
               className="flex flex-col items-center justify-center px-5 py-12 text-center sm:px-8"
               role="status"
             >
-              <div className="relative mb-5">
-                <div
-                  className="absolute inset-0 rounded-2xl bg-linear-to-br from-primary/8 via-transparent to-transparent blur-xl"
-                  aria-hidden
-                />
-                <div className="relative flex size-14 items-center justify-center rounded-2xl border border-border/70 bg-card shadow-sm ring-1 ring-black/5 dark:ring-white/10">
-                  <Search className="size-6 text-muted-foreground" strokeWidth={1.75} aria-hidden />
-                </div>
-              </div>
               <p className="text-[15px] font-semibold tracking-tight text-foreground">搜索博客</p>
-              <p className="mt-2 max-w-[18rem] text-[13px] leading-relaxed text-muted-foreground">
-                在搜索框键入词组，将按标题与摘要匹配；无需按回车，稍作等待即可列出结果。
-              </p>
+              <p className="mt-2 text-xs text-muted-foreground">输入关键词开始搜索</p>
             </div>
           )}
         </CommandList>
